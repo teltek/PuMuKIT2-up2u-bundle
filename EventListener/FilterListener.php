@@ -47,25 +47,4 @@ class FilterListener
             }
         }
     }
-
-    private function getPrivateBroadcastIds()
-    {
-        $broadcastRepo = $this->dm->getRepository('PumukitSchemaBundle:Broadcast');
-        $privateBroadcastIds = $broadcastRepo->findDistinctIdsByBroadcastTypeId(Broadcast::BROADCAST_TYPE_PRI);
-        if (null != $privateBroadcastIds) {
-            return $privateBroadcastIds->toArray();
-        }
-
-        return array();
-    }
-
-    private function getBroadcastCriteria()
-    {
-        $privateBroadcastIds = $this->getPrivateBroadcastIds();
-        if (null != $privateBroadcastIds) {
-            return array('$nin' => $privateBroadcastIds);
-        }
-
-        return array();
-    }
 }
