@@ -1,0 +1,16 @@
+<div style="padding-left:20px">
+        <form name="form_language" action="{{ path('pumukit_webtv_filter_language') }}" method="POST">
+            {% for element in tracks_languages %}
+                <input class="filter_language" type="checkbox" value="{{ element._id[0] }}" name="track_language[]" {% if element._id[0] in app.session.get('filter_language') %}checked="checked"{% endif %} />
+                <span>{{ element._id[0]|language_name }}</span>
+                <span class="badge">{{ element.count }}</span>
+                <br>
+            {% endfor %}
+        </form>
+</div>
+
+<script type="text/javascript">
+    $('.filter_language').on('change', function () {
+        $(this).parent('form').submit();
+    });
+</script>

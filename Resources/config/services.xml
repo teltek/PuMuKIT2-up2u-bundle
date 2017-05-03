@@ -29,5 +29,10 @@
             <argument type="service" id="doctrine_mongodb.odm.document_manager"/>
         </service>
 
+        <service id="pumukit_web_tv.geantfilter" class="Pumukit\Geant\WebTVBundle\EventListener\FilterListener">
+            <argument type="service" id="doctrine_mongodb.odm.document_manager" />
+            <tag name="kernel.event_listener" event="kernel.controller"/>
+        </service>
+
     </services>
 </container>
