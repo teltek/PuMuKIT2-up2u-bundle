@@ -2,13 +2,10 @@
 
 namespace Pumukit\Geant\WebTVBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Pumukit\SchemaBundle\Document\MultimediaObject;
-use Pumukit\SchemaBundle\Document\Series;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Pumukit\WebTVBundle\Controller\WidgetController as BaseWidgetController;
 
 class WidgetController extends BaseWidgetController
@@ -45,8 +42,8 @@ class WidgetController extends BaseWidgetController
     {
         $session = $this->get('session');
         $session->set('filter_language', $request->request->get('track_language'));
-        $route = ($request->request->has('referer')) ? $request->request->has('referer') : 'pumukit_webtv_index_index';
+        $route = ($request->headers->has('referer')) ? $request->headers->get('referer') : 'pumukit_webtv_index_index';
 
-        return $this->redirectToRoute($route);
+        return $this->redirect($route);
     }
 }
