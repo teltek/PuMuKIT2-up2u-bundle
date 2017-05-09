@@ -3,7 +3,6 @@
 namespace Pumukit\Geant\WebTVBundle\EventListener;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Pumukit\SchemaBundle\Document\Broadcast;
 use Pumukit\WebTVBundle\Controller\WebTVController;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 
@@ -34,7 +33,7 @@ class FilterListener
         }
 
         //@deprecated: PuMuKIT 2.2: This logic will be removed eventually. Please implement the interface WebTVBundleController to use the filter.
-        $deprecatedCheck = false && (false !== strpos($req->attributes->get('_controller'), 'WebTVBundle'));
+        $deprecatedCheck = (false !== strpos($req->attributes->get('_controller'), 'WebTVBundle'));
 
         if (($controller[0] instanceof WebTVController /*deprecated*/ || $deprecatedCheck)
             && $event->isMasterRequest()
