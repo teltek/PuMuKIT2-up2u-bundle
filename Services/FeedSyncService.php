@@ -104,10 +104,10 @@ class FeedSyncService
             $series = $this->seriesRepo->findOneBySeriesProperty('geant_provider', $tag->getCod());
             if ($series) {
                 $numMmobjs = $this->mmobjRepo->createBuilderWithSeries($series)
-                                  ->field('status')
-                                  ->equals(MultimediaObject::STATUS_PUBLISHED)
-                                  ->count()
-                                  ->getQuery()->execute();
+                           ->field('status')
+                           ->equals(MultimediaObject::STATUS_PUBLISHED)
+                           ->count()
+                           ->getQuery()->execute();
 
                 if ($numMmobjs > 0) {
                     $tag->setProperty('empty', false);
@@ -223,21 +223,23 @@ class FeedSyncService
 
     public function syncMmobj($parsedTerena, \MongoDate $lastSyncDate = null)
     {
+        static $tagCache = array();
+
         if (!isset($lastSyncDate)) {
             $lastSyncDate = new \MongoDate();
         }
         $factory = $this->factoryService;
         $mmobj = $this->mmobjRepo->createQueryBuilder()
-                      ->field('properties.geant_id')
-                      ->equals($parsedTerena['identifier'])
-                      ->getQuery()
-                      ->getSingleResult();
+               ->field('properties.geant_id')
+               ->equals($parsedTerena['identifier'])
+               ->getQuery()
+               ->getSingleResult();
 
         $series = $this->seriesRepo->createQueryBuilder()
-                       ->field('properties.geant_provider')
-                       ->equals($parsedTerena['provider'])
-                       ->getQuery()
-                       ->getSingleResult();
+                ->field('properties.geant_provider')
+                ->equals($parsedTerena['provider'])
+                ->getQuery()
+                ->getSingleResult();
         if (!isset($series)) {
             $series = $factory->createSeries();
             $series->setProperty('geant_provider', $parsedTerena['provider']);
@@ -253,8 +255,15 @@ class FeedSyncService
             $mmobj->setProperty('geant_id', $parsedTerena['identifier']);
             $mmobj->setProperty('feed_updated_date', $parsedTerena['lastUpdateDate']);
             //Add 'provider' tag
-            $providerTag = $this->tagRepo->findOneByCod($parsedTerena['provider']);
-            if (!isset($providerTag)) {
+
+
+            $tagCod = $parsedTerena['provider'];
+
+            if (isset($tagCache[$tagCod])) {
+                $providerTag = $tagCache[$tagCod];
+            } elseif ($providerTag = $this->tagRepo->findOneByCod($parsedTerena['provider'])) {
+                $tagCache[$tagCod] = $providerTag;
+            } else {
                 $providerTag = new Tag();
                 $providerTag->setParent($this->providerRootTag);
                 $providerTag->setCod($parsedTerena['provider']);
@@ -262,6 +271,7 @@ class FeedSyncService
                 $providerTag->setDisplay(true);
                 $providerTag->setMetatag(false);
                 $this->dm->persist($providerTag);
+                $tagCache[$tagCod] = $providerTag;
             }
             $this->tagService->addTagToMultimediaObject($mmobj, $providerTag->getId(), false);
         }
@@ -289,6 +299,7 @@ class FeedSyncService
         $this->syncThumbnail($mmobj, $parsedTerena);
 
         //Errors
+
         if ($parsedTerena['geantErrors']) {
             $mmobj->setProperty('geant_errors', $parsedTerena['geantErrors']);
         }
@@ -379,8 +390,8 @@ class FeedSyncService
         $urlParsed = parse_url($url);
         //TODO if track_url add a error.
         $urlExtension = isset($urlParsed['path']) ?
-                        pathinfo($urlParsed['path'], PATHINFO_EXTENSION) :
-                        null;
+                      pathinfo($urlParsed['path'], PATHINFO_EXTENSION) :
+                      null;
         $track = $mmobj->getTrackWithTag('geant_track');
         if (!isset($track)) {
             $track = new Track();
@@ -442,9 +453,9 @@ class FeedSyncService
         }
     }
 
-/**
- * Prints on screen an estimated duration of the script and statistics about its execution.
- */
+    /**
+     * Prints on screen an estimated duration of the script and statistics about its execution.
+     */
     //TODO USE Symfony Progress Bar: http://symfony.com/doc/current/components/console/helpers/progressbar.html
     protected function showProgressEstimateDuration($time_started, $processed, $total, $progressBar = null)
     {
@@ -460,8 +471,8 @@ class FeedSyncService
         } else {
             echo "\nTerena entry ".$processed.' / '.$total."\n";
             echo 'Elapsed time: '.sprintf('%.2F', $elapsed_min).
-                 ' minutes - estimated: '.sprintf('%.2F', $eta_min).
-                 ' minutes. Speed: '.$processed_min." terenas / minute.\n";
+                                 ' minutes - estimated: '.sprintf('%.2F', $eta_min).
+                                 ' minutes. Speed: '.$processed_min." terenas / minute.\n";
         }
     }
 
