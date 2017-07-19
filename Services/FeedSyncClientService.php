@@ -21,6 +21,11 @@ class FeedSyncClientService
         //TODO DO I NEED INITS?
     }
 
+    public function setFeedUrl($feedUrl)
+    {
+        $this->feedUrl = $feedUrl;
+    }
+
     /** Returns a Generator (iterable object) for 'Terena Objects'
      * This function's return value can be iterated over as an array of 'Terena Objects'.
      *
@@ -71,6 +76,7 @@ class FeedSyncClientService
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
         $sal['content'] = curl_exec($ch);
         $sal['error'] = curl_error($ch);
@@ -103,6 +109,7 @@ class FeedSyncClientService
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
         $sal['content'] = curl_exec($ch);
         $sal['error'] = curl_error($ch);

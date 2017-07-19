@@ -5,6 +5,7 @@ namespace Pumukit\Geant\WebTVBundle\Command;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class SyncFeedGeantCommand extends ContainerAwareCommand
@@ -45,8 +46,19 @@ class SyncFeedGeantCommand extends ContainerAwareCommand
                 'b',
                 InputOption::VALUE_NONE,
                 'If set, the task will output a symfony style progress bar.'
+            )
+        ->addArgument(
+                'url',
+                InputArgument::OPTIONAL,
+                'If set, force the feed URL for FeedSyncClientService.'
+            )
+        ->addArgument(
+                'tag',
+                InputArgument::OPTIONAL,
+                'If set, name to mark the new multimedia object created.'
             );
     }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $formatter = $this->getHelper('formatter');
@@ -60,8 +72,15 @@ class SyncFeedGeantCommand extends ContainerAwareCommand
         $provider = $input->getOption('provider');
         $verbose = $input->getOption('showids') ? true : false;
         $show_bar = $input->getOption('show-progress-bar') ? true : false;
+
+        $tag = $input->getArgument('tag');
+        $customUrl = $input->getArgument('url');
+        if ($customUrl) {
+            $feedSyncService->setFeedUrl($customUrl);
+        }
+
         $output->writeln("\nStarting sync...\n");
-        $startTime = $feedSyncService->sync($output, $limit, $optWall, $provider, $verbose, $show_bar);
+        $startTime = $feedSyncService->sync($output, $limit, $optWall, $provider, $verbose, $show_bar, $tag);
         $output->writeln("\nSYNC FINISHED: Blocking Unsynced..");
         $feedSyncService->blockUnsynced($output, $startTime);
         //SHUTDOWN HAPPILY

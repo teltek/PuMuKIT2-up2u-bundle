@@ -80,6 +80,11 @@ class FeedSyncService
         $this->optWall = false;
     }
 
+    public function setFeedUrl($feedUrl)
+    {
+        $this->feedClientService->setFeedUrl($feedUrl);
+    }
+
     public function blockUnsynced($output, $startTime)
     {
         $mmobjs = $this->mmobjRepo->createQueryBuilder()->field('status')->notEqual(MultimediaObject::STATUS_BLOQ)->field('properties.last_sync_date')->lt($startTime)->getQuery()->execute();
@@ -130,7 +135,7 @@ class FeedSyncService
         $output->writeln("-----------\nblockUnsynced() finished");
     }
 
-    public function sync($output, $limit = 0, $optWall = false, $provider = null, $verbose = false, $setProgressBar = false)
+    public function sync($output, $limit = 0, $optWall = false, $provider = null, $verbose = false, $setProgressBar = false, $tag = null)
     {
         $this->optWall = $optWall;
         $this->verbose = $verbose;
@@ -186,7 +191,7 @@ class FeedSyncService
             }
 
             try {
-                $this->syncMmobj($parsedTerena, $lastSyncDate);
+                $this->syncMmobj($parsedTerena, $lastSyncDate, $tag);
             } catch (FeedSyncException $e) {
                 if (isset($progressBar)) {
                     $progressBar->clear();
@@ -221,7 +226,7 @@ class FeedSyncService
         return $lastSyncDate;
     }
 
-    public function syncMmobj($parsedTerena, \MongoDate $lastSyncDate = null)
+    public function syncMmobj($parsedTerena, \MongoDate $lastSyncDate = null, $tag = null)
     {
         static $tagCache = array();
 
@@ -253,6 +258,7 @@ class FeedSyncService
         if (!isset($mmobj)) {
             $mmobj = $factory->createMultimediaObject($series, false);
             $mmobj->setProperty('geant_id', $parsedTerena['identifier']);
+            $mmobj->setProperty('geant_tag', $tag);
             $mmobj->setProperty('feed_updated_date', $parsedTerena['lastUpdateDate']);
             //Add 'provider' tag
 
