@@ -82,7 +82,7 @@ class SyncFeedGeantCommand extends ContainerAwareCommand
         $output->writeln("\nStarting sync...\n");
         $startTime = $feedSyncService->sync($output, $limit, $optWall, $provider, $verbose, $show_bar, $tag);
         $output->writeln("\nSYNC FINISHED: Blocking Unsynced..");
-        $feedSyncService->blockUnsynced($output, $startTime);
+        $feedSyncService->blockUnsynced($output, $startTime, $tag);
         //SHUTDOWN HAPPILY
     }
 

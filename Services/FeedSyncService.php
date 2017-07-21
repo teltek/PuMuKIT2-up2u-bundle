@@ -85,9 +85,14 @@ class FeedSyncService
         $this->feedClientService->setFeedUrl($feedUrl);
     }
 
-    public function blockUnsynced($output, $startTime)
+    public function blockUnsynced($output, $startTime, $tag = null)
     {
-        $mmobjs = $this->mmobjRepo->createQueryBuilder()->field('status')->notEqual(MultimediaObject::STATUS_BLOQ)->field('properties.last_sync_date')->lt($startTime)->getQuery()->execute();
+        $qb = $this->mmobjRepo->createQueryBuilder();
+        if ($tag) {
+            $qb->field('geant_tag')->equals($tag);
+        }
+
+        $mmobjs = $qb->field('status')->notEqual(MultimediaObject::STATUS_BLOQ)->field('properties.last_sync_date')->lt($startTime)->getQuery()->execute();
         $output->writeln('...Blocking non-updated mmobjs...');
         $count = 0;
         foreach ($mmobjs as $mm) {
