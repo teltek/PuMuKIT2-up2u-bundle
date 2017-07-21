@@ -108,6 +108,7 @@ class FeedSyncService
         $this->dm->clear();
         $output->writeln(sprintf('Number of blocked mmobjs: %s', $count));
         $output->writeln('...Blocking empty tags...');
+        $this->providerRootTag = $this->tagRepo->findOneByCod('PROVIDER'); // Necessary after the DocumentManager::clear
         $providerTags = $this->providerRootTag->getChildren();
         $count = 0;
         foreach ($providerTags as $tag) {
