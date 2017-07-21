@@ -236,6 +236,8 @@ class FeedSyncService
     {
         static $tagCache = array();
 
+        $providerTitle = sprintf("%s - %s", $tag, $parsedTerena['provider']);
+
         if (!isset($lastSyncDate)) {
             $lastSyncDate = new \MongoDate();
         }
@@ -254,7 +256,7 @@ class FeedSyncService
         if (!isset($series)) {
             $series = $factory->createSeries();
             $series->setProperty('geant_provider', $parsedTerena['provider']);
-            $series->setTitle($parsedTerena['provider']);
+            $series->setTitle($providerTitle);
             $this->dm->persist($series);
             $this->dm->flush();
         }
@@ -279,7 +281,7 @@ class FeedSyncService
                 $providerTag = new Tag();
                 $providerTag->setParent($this->providerRootTag);
                 $providerTag->setCod($parsedTerena['provider']);
-                $providerTag->setTitle($parsedTerena['provider']);
+                $providerTag->setTitle($providerTitle);
                 $providerTag->setDisplay(true);
                 $providerTag->setMetatag(false);
                 $this->dm->persist($providerTag);
