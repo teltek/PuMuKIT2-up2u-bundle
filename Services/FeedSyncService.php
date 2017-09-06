@@ -236,7 +236,7 @@ class FeedSyncService
     {
         static $tagCache = array();
 
-        $providerTitle = sprintf("%s - %s", $tag, $parsedTerena['provider']);
+        $providerTitle = sprintf('%s - %s', $tag, $parsedTerena['provider']);
 
         if (!isset($lastSyncDate)) {
             $lastSyncDate = new \MongoDate();
@@ -256,6 +256,7 @@ class FeedSyncService
         if (!isset($series)) {
             $series = $factory->createSeries();
             $series->setProperty('geant_provider', $parsedTerena['provider']);
+            $series->setProperty('geant_repository', $tag);
             $series->setTitle($providerTitle);
             $this->dm->persist($series);
             $this->dm->flush();
@@ -270,7 +271,6 @@ class FeedSyncService
             $mmobj->setProperty('feed_updated_date', $parsedTerena['lastUpdateDate']);
             //Add 'provider' tag
 
-
             $tagCod = $parsedTerena['provider'];
 
             if (isset($tagCache[$tagCod])) {
@@ -284,6 +284,8 @@ class FeedSyncService
                 $providerTag->setTitle($providerTitle);
                 $providerTag->setDisplay(true);
                 $providerTag->setMetatag(false);
+                $providerTag->setProperty('geant_provider', $parsedTerena['provider']);
+                $providerTag->setProperty('geant_repository', $tag);
                 $this->dm->persist($providerTag);
                 $tagCache[$tagCod] = $providerTag;
             }
@@ -316,8 +318,7 @@ class FeedSyncService
 
         if ($parsedTerena['geantErrors']) {
             $mmobj->setProperty('geant_errors', $parsedTerena['geantErrors']);
-        }
-        else {
+        } else {
             $mmobj->setProperty('geant_errors', null);
         }
 
@@ -343,7 +344,7 @@ class FeedSyncService
     {
         foreach ($parsedTerena['tags'] as $parsedTag) {
             $parsedTag = strval($parsedTag); //Sometimes they are ints.
-            $tag = $this->tagRepo->findOneByCod($parsedTag);//First we search by code on the database (it should be iTunesU, but could be other)
+            $tag = $this->tagRepo->findOneByCod($parsedTag); //First we search by code on the database (it should be iTunesU, but could be other)
 
             if (!isset($tag)) {  //Second we search by title on the database (again, it should be iTunesU, but could be other)
                 $tag = $this->tagRepo->findOneByTitle($parsedTag);
@@ -467,9 +468,9 @@ class FeedSyncService
         }
     }
 
-    /**
-     * Prints on screen an estimated duration of the script and statistics about its execution.
-     */
+/**
+ * Prints on screen an estimated duration of the script and statistics about its execution.
+ */
     //TODO USE Symfony Progress Bar: http://symfony.com/doc/current/components/console/helpers/progressbar.html
     protected function showProgressEstimateDuration($time_started, $processed, $total, $progressBar = null)
     {
@@ -479,7 +480,7 @@ class FeedSyncService
         $eta_sec = ($total * $elapsed_sec) / $processed;
         $eta_min = $eta_sec / 60;
         $elapsed_min = $elapsed_sec / 60;
-        $processed_min = (integer) ($processed / $elapsed_min);
+        $processed_min = (int) ($processed / $elapsed_min);
         if (isset($progressBar)) {
             $progressBar->setProgress($processed);
         } else {
@@ -490,9 +491,6 @@ class FeedSyncService
         }
     }
 
-    /**
-     *
-     */
     public function syncRepos($output, $optWall, $show_bar, $reposDir = null)
     {
         if (!$reposDir) {
@@ -525,13 +523,13 @@ class FeedSyncService
                 $str = file_get_contents($fileDir);
                 $providerData = json_decode($str, true);
                 $provider->setProperty('description', $providerData['description']);
-                $provider->setTitle($providerData['title']);
+                $providerTitle = sprintf('%s - %s', $provider->getProperty('geant_repository'), $providerData['title']);
+                $provider->setTitle();
                 $thumbnailUrl = $this->parseThumbnailUrl($providerData['thumbnail_url']);
                 $provider->setProperty('thumbnail_url', $thumbnailUrl);
             } else {
                 $provider->setProperty('description', '');
                 $provider->setProperty('thumbnail_url', $defaultThumbnail);
-                $provider->setTitle($provider->getCod());
             }
             $this->dm->persist($provider);
             $progressBar->advance();
