@@ -524,7 +524,7 @@ class FeedSyncService
                 $providerData = json_decode($str, true);
                 $provider->setProperty('description', $providerData['description']);
                 $providerTitle = sprintf('%s - %s', $provider->getProperty('geant_repository'), $providerData['title']);
-                $provider->setTitle();
+                $provider->setTitle($providerTitle);
                 $thumbnailUrl = $this->parseThumbnailUrl($providerData['thumbnail_url']);
                 $provider->setProperty('thumbnail_url', $thumbnailUrl);
             } else {
