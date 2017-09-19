@@ -50,7 +50,14 @@ class FeedProcesserService
         $processedObject['record_date'] = $date;
         $processedObject['copyright'] = $this->retrieveCopyright($geantFeedObject, $lang);
         $processedObject['license'] = $this->retrieveCopyright($geantFeedObject, $lang);
-        $processedObject['track_url'] = isset($geantFeedObject['expressions']['manifestations']['items']['url']) ? $geantFeedObject['expressions']['manifestations']['items']['url'] : '';
+
+        if (isset($geantFeedObject['expressions']['manifestations']['items']['url'])) {
+            $processedObject['track_url'] = $geantFeedObject['expressions']['manifestations']['items']['url'];
+        } elseif (isset($geantFeedObject['expressions']['manifestations']['items'][0]['url'])) {
+            $processedObject['track_url'] = $geantFeedObject['expressions']['manifestations']['items'][0]['url'];
+        } else {
+            $processedObject['track_url'] = '';
+        }
 
         if ($processedObject['track_url'] == '') {
             throw new FeedSyncException(sprintf('The object with identifier: %s does not have an url (expressions/manifestations/items/url).', $processedObject['identifier']));
@@ -94,7 +101,8 @@ class FeedProcesserService
         $languageNames = Intl::getLanguageBundle()->getLanguageNames();
 
         if (!array_key_exists($lang, $languageNames)) {
-            throw new FeedSyncException(sprintf('The feed with ID: %s has a language format that is not recognized: %s', $geantFeedObject['identifier'], $geantFeedObject['expressions']['language']));
+            //throw new FeedSyncException(sprintf('The feed with ID: %s has a language format that is not recognized: %s', $geantFeedObject['identifier'], $geantFeedObject['expressions']['language']));
+            $lang = 'Unknown';
         }
 
         return $lang;
