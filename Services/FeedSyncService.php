@@ -89,7 +89,7 @@ class FeedSyncService
     {
         $qb = $this->mmobjRepo->createQueryBuilder();
         if ($tag) {
-            $qb->field('geant_tag')->equals($tag);
+            $qb->field('properties.geant_tag')->equals($tag);
         }
 
         $mmobjs = $qb->field('status')->notEqual(MultimediaObject::STATUS_BLOQ)->field('properties.last_sync_date')->lt($startTime)->getQuery()->execute();
