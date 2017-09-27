@@ -3,7 +3,8 @@
 {% block body %}
 {% autoescape false %}
 
-{% set default_contrast_background = default_contrast_background | default("#033951") %}
+{% set default_contrast_background = "#033951" %}
+{% set default_contrast_font = "#fff" %}
 {% set content_max_width = "1350px" %}
 {% set default_content_font = "#003c5e" %}
 {% set default_light_font = "#e81657" %}
@@ -418,6 +419,7 @@ a:hover .cover {
 @media (max-width: 767px) {
     .main-content {
         max-width: 500px;
+        margin: 0 auto;
     }
 }
 @media (max-width: 425px) {
