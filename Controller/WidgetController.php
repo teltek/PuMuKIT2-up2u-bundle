@@ -10,6 +10,21 @@ use Pumukit\WebTVBundle\Controller\WidgetController as BaseWidgetController;
 
 class WidgetController extends BaseWidgetController
 {
+    public static $menuResponse = null;
+
+    public function menuAction()
+    {
+        if (self::$menuResponse) {
+            return self::$menuResponse;
+        }
+
+        $array = parent::menuAction();
+
+        self::$menuResponse = $this->render('PumukitWebTVBundle:Widget:menu.html.twig', $array);
+
+        return self::$menuResponse;
+    }
+
     /**
      * @Template()
      */
