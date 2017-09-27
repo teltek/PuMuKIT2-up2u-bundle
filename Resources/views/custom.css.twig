@@ -1,8 +1,9 @@
 {% extends 'PumukitWebTVBundle::default.css.twig' %}
 
 {% block body %}
+{% autoescape false %}
 
-{% set default_contrast_background = default_contrast_background | default("#033951") %} 
+{% set default_contrast_background = default_contrast_background | default("#033951") %}
 {% set content_max_width = "1350px" %}
 {% set default_content_font = "#003c5e" %}
 {% set default_light_font = "#e81657" %}
@@ -160,7 +161,7 @@ abbr[title]  {
     height: 103px;
     width: 138px;
     padding: 2px;
-    
+
 }
 .thumbnail img.thumbnailimg{
     height: 100%;
@@ -218,7 +219,7 @@ abbr[title]  {
     text-decoration-style: dotted;
     -moz-text-decoration-style: dotted;
     -webkit-text-decoration-style: dotted;
-    
+
 }
 .pumukit_mmobj.pumukit_repository{
     height:auto;
@@ -306,23 +307,23 @@ select.form-control {
     font-weight: normal;
 }
 #search-box {
-   
+
     border: 2px solid {{default_content_font}};
     border-right-style: none;
     border-radius: 4px;
     border-right: 0;
     border-bottom-right-radius: 0;
     border-top-right-radius: 0;
-   
+
 }
 #search-box:focus {
-      
+
    border: 2px solid {{default_content_font}};
    border-right-style: none;
-    
+
 }
 #search {
-    
+
     border: 2px solid {{default_content_font}};
     border-right-style: none;
     border-radius: 4px;
@@ -360,14 +361,14 @@ select.form-control {
 }
 
 .input-group-addon{
-	
-    
-    
-    
+
+
+
+
      border: 2px solid {{default_content_font}};
      border-left-style: none;
 
-    
+
 }
 
 .form-group .input-group.date .form-control,form-group .input-group.date .form-control,.form-group .input-group.date .input-group-addon{
@@ -440,4 +441,6 @@ a:hover .cover {
     background:rgba(0,0,0,0.65);
     padding: 1px 3px;
 }
+
+{% endautoescape %}
 {% endblock %}
