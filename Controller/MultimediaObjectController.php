@@ -8,7 +8,7 @@ use Pumukit\SchemaBundle\Document\MultimediaObject;
 
 class MultimediaObjectController extends ParentController
 {
-    public function preExecute(MultimediaObject $multimediaObject, Request $request)
+    public function preExecute(MultimediaObject $multimediaObject, Request $request, $secret = false)
     {
         if ($multimediaObject->getProperty('iframeable') === true ) {
             $this->dispatchViewEvent($multimediaObject);
