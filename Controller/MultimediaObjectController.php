@@ -4,7 +4,9 @@ namespace Pumukit\Geant\WebTVBundle\Controller;
 use Pumukit\WebTVBundle\Controller\MultimediaObjectController as ParentController;
 use Symfony\Component\HttpFoundation\Request;
 use Pumukit\SchemaBundle\Document\MultimediaObject;
-
+use Pumukit\SchemaBundle\Document\Track;
+use Pumukit\BasePlayerBundle\Event\BasePlayerEvents;
+use Pumukit\BasePlayerBundle\Event\ViewedEvent;
 
 class MultimediaObjectController extends ParentController
 {
@@ -25,5 +27,11 @@ class MultimediaObjectController extends ParentController
             }
             return $this->redirect($redirectUrl);
         }
+    }
+
+    public function dispatchViewEvent(MultimediaObject $multimediaObject, Track $track = null)
+    {
+        $event = new ViewedEvent($multimediaObject, $track);
+        $this->get('event_dispatcher')->dispatch(BasePlayerEvents::MULTIMEDIAOBJECT_VIEW, $event);
     }
 }
