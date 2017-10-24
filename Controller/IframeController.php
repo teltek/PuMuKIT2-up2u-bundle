@@ -22,4 +22,17 @@ class IframeController extends PlayerController
         return array('multimediaObject' => $multimediaObject,
                      'iframe_url' => $iframeUrl);
     }
+
+    /**
+     * @Route("/iframe/{id}", name="pumukit_webtv_multimediaobject_iframe" )
+     * @Template()
+     */
+    public function iframeAction(MultimediaObject $multimediaObject, Request $request)
+    {
+        if ($multimediaObject->getProperty('iframeable') === true ) {
+            $iframeUrl = $multimediaObject->getProperty('iframe_url');
+            return $this->redirect($iframeUrl);
+        }
+        return parent::iframeAction($multimediaObject, $request);
+    }
 }
