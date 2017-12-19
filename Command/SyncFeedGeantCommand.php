@@ -1,6 +1,6 @@
 <?php
 
-namespace Pumukit\Geant\WebTVBundle\Command;
+namespace Pumukit\Up2u\WebTVBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -8,13 +8,13 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class SyncFeedGeantCommand extends ContainerAwareCommand
+class SyncFeedUp2uCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
         $this
         ->setName('geant:syncfeed:import')
-        ->setDescription('Imports Geant feed and publishes on PuMuKIT.')
+        ->setDescription('Imports Up2u feed and publishes on PuMuKIT.')
         ->setHelp($this->getCommandHelpText())
         ->addOption(
                 'Wall',
@@ -89,7 +89,7 @@ class SyncFeedGeantCommand extends ContainerAwareCommand
     protected function getCommandHelpText()
     {
         return <<<EOT
-Command to sync the Geant feed data into the database and published it on the WebTV.
+Command to sync the Up2u feed data into the database and published it on the WebTV.
 
 The --force parameter has to be used to actually drop the database.
 

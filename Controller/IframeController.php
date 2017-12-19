@@ -1,6 +1,6 @@
 <?php
 
-namespace Pumukit\Geant\WebTVBundle\Controller;
+namespace Pumukit\Up2u\WebTVBundle\Controller;
 
 use Pumukit\WebTVBundle\Controller\PlayerController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;

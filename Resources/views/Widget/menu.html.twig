@@ -6,7 +6,7 @@
     </a>
 
     <!-- By Repository Catalogue -->
-    <a href="{{ path('pumukit_geant_webtv_repositorycatalogue') }}" class="element {{menu_selected == 'pumukit_geant_webtv_repositorycatalogue'? 'selected' : ''}}">{% trans %} By repository catalogue {% endtrans %}</a>
+    <a href="{{ path('pumukit_up2u_webtv_repositorycatalogue') }}" class="element {{menu_selected == 'pumukit_up2u_webtv_repositorycatalogue'? 'selected' : ''}}">{% trans %} By repository catalogue {% endtrans %}</a>
 
     <!-- By subject Catalogue -->
     <a href="{{ path('pumukit_webtv_categories_index') }}" class="element {{menu_selected=="pumukit_webtv_categories_index"?'selected':''}}">{% trans %} By subject catalogue {% endtrans %}</a>
@@ -39,5 +39,5 @@
 
 <div class="row widget" style="margin-top:10px;">
   <h4>View only</h4>
-  {% render(controller('PumukitGeantWebTVBundle:Widget:tracksLanguages')) %}
+  {% render(controller('PumukitUp2uWebTVBundle:Widget:tracksLanguages')) %}
 </div>

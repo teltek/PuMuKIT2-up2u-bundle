@@ -8,7 +8,7 @@
       {% if tag.title|slice(0,1)|upper != lastChar %}
         <h3>{{tag.title|slice(0,1)|upper}}</h3>
       {% endif %}
-      {% include 'PumukitGeantWebTVBundle:Catalogue:serieslike_tag.html.twig' with {'tag': tag } %}
+      {% include 'PumukitUp2uWebTVBundle:Catalogue:serieslike_tag.html.twig' with {'tag': tag } %}
       {% set lastChar = tag.title|slice(0,1)|upper %}
     {% endfor %}
 {% endblock %}

@@ -1,6 +1,6 @@
 <?php
 
-namespace Pumukit\Geant\WebTVBundle\Services;
+namespace Pumukit\Up2u\WebTVBundle\Services;
 
 /**
  * Base FeedSyncException for the FeedSyncServices.

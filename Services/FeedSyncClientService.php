@@ -1,6 +1,6 @@
 <?php
 
-namespace Pumukit\Geant\WebTVBundle\Services;
+namespace Pumukit\Up2u\WebTVBundle\Services;
 
 /**
  *  Service that acts as a client to read the feeds and return a JSON structure with each Geant Feed Object.
