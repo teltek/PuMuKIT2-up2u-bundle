@@ -1,6 +1,6 @@
 <?php
 
-namespace Pumukit\Geant\WebTVBundle\Controller;
+namespace Pumukit\Up2u\WebTVBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -18,7 +18,7 @@ class MultimediaObjectController extends ParentController
         if ($multimediaObject->getProperty('iframeable') === true) {
             $this->dispatchViewEvent($multimediaObject);
 
-            return $this->forward('PumukitGeantWebTVBundle:Iframe:index', array('request' => $request, 'multimediaObject' => $multimediaObject));
+            return $this->forward('PumukitUp2uWebTVBundle:Iframe:index', array('request' => $request, 'multimediaObject' => $multimediaObject));
         } elseif ($multimediaObject->getProperty('redirect') === true) {
             $this->dispatchViewEvent($multimediaObject);
             $redirectUrl = $multimediaObject->getProperty('redirect_url');

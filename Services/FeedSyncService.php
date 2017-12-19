@@ -1,6 +1,6 @@
 <?php
 
-namespace Pumukit\Geant\WebTVBundle\Services;
+namespace Pumukit\Up2u\WebTVBundle\Services;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Pumukit\SchemaBundle\Document\MultimediaObject;
@@ -494,7 +494,7 @@ class FeedSyncService
     public function syncRepos($output, $optWall, $show_bar, $reposDir = null)
     {
         if (!$reposDir) {
-            $reposDir = $this->dataFolder->locateResource('@PumukitGeantWebTVBundle/Resources/data/repos_data');
+            $reposDir = $this->dataFolder->locateResource('@PumukitUp2uWebTVBundle/Resources/data/repos_data');
         }
         $providerTag = $this->tagRepo->findOneBy(array('cod' => 'PROVIDER'));
         if (!$providerTag) {

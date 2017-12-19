@@ -1,6 +1,6 @@
 <?php
 
-namespace Pumukit\Geant\WebTVBundle\EventListener;
+namespace Pumukit\Up2u\WebTVBundle\EventListener;
 
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Pumukit\WebTVBundle\Controller\WebTVController;
@@ -40,7 +40,7 @@ class FilterListener
                 && $isFilterActivated) {
             if ($req->getSession()->has('filter_language')) {
                 $configuration = $this->dm->getConfiguration();
-                $configuration->addFilter('trackslanguagefilter', 'Pumukit\Geant\WebTVBundle\Filter\TracksLanguageFilter');
+                $configuration->addFilter('trackslanguagefilter', 'Pumukit\Up2u\WebTVBundle\Filter\TracksLanguageFilter');
                 $filtertrack = $this->dm->getFilterCollection()->enable('trackslanguagefilter');
                 $filtertrack->setParameter('tracks_language', $req->getSession()->get('filter_language'));
             }

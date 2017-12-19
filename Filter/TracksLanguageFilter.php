@@ -1,6 +1,6 @@
 <?php
 
-namespace Pumukit\Geant\WebTVBundle\Filter;
+namespace Pumukit\Up2u\WebTVBundle\Filter;
 
 use Doctrine\ODM\MongoDB\Mapping\ClassMetaData;
 use Doctrine\ODM\MongoDB\Query\Filter\BsonFilter;

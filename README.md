@@ -1,8 +1,8 @@
-# GEANT-OER Project: GeantWebTVBundle
+# UP2U-EDUOER Project: Up2uWebTVBundle
 
 Bundle based on [Symfony](http://symfony.com/) to work with the [PuMuKIT2 Video Platform](https://github.com/campusdomar/PuMuKIT2/blob/2.1.x/README.md).
 
-This bundle overrides the [PuMuKIT-2 WebTV Bundle](https://github.com/campusdomar/PuMuKIT2/tree/master/src/Pumukit/WebTVBundle). It has been developed as the Web portal for the Geant-OER project, whose goal is the creation of an European repository of educational multimedia resources for learning.
+This bundle overrides the [PuMuKIT-2 WebTV Bundle](https://github.com/campusdomar/PuMuKIT2/tree/master/src/Pumukit/WebTVBundle). It has been developed as the Web portal for the UP2U EDUOER project, whose goal is the creation of an European repository of educational multimedia resources for learning.
 
 Installation
 ------------
@@ -38,7 +38,7 @@ Install the bundle by executing the following line command. This command updates
 .
 
 ```bash
-$ php app/console pumukit:install:bundle Pumukit/Geant/WebTVBundle/PumukitGeantWebTVBundle
+$ php app/console pumukit:install:bundle Pumukit/Up2u/WebTVBundle/PumukitUp2uWebTVBundle
 ```
 
 ### Step 4: Install the Podcast bundle and initialize iTunesU tags.

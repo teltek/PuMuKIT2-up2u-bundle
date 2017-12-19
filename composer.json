@@ -1,7 +1,7 @@
 {
-    "name": "teltek/pmk2-geant-webtv-bundle",
+    "name": "teltek/pmk2-up2u-eduoer-bundle",
     "type": "symfony-bundle",
-    "description": "GEANT WebTVBundle.",
+    "description": "UP2U eduoer WebTVBundle.",
     "keywords": [
         "theming",
         "symfony2",
@@ -9,7 +9,7 @@
         "pumukit",
         "teltek"
     ],
-    "homepage": "https://gitlab.teltek.es/pumukit2/pumukitgeantwebtvbundle",
+    "homepage": "https://github.com/teltek/PuMuKIT2-up2u-eduoer-bundle",
     "license": "Copyright",
     "authors": [
         {
@@ -25,7 +25,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Pumukit\\Geant\\WebTVBundle\\": ""
+            "Pumukit\\Up2u\\WebTVBundle\\": ""
         }
     },
     "bin": ["Resources/data/bin/geant_syncfeed_import"]

@@ -5,16 +5,16 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="pumukit_web_tv.geant.feedsyncclient" class="Pumukit\Geant\WebTVBundle\Services\FeedSyncClientService">
+        <service id="pumukit_web_tv.geant.feedsyncclient" class="Pumukit\Up2u\WebTVBundle\Services\FeedSyncClientService">
           <argument>%geant.feedsyncservice.baseurl%</argument>
           <argument>%kernel.logs_dir%</argument>
           <argument>%geant.savelogs%</argument>
         </service>
 
-        <service id="pumukit_web_tv.geant.feedprocesser" class="Pumukit\Geant\WebTVBundle\Services\FeedProcesserService">
+        <service id="pumukit_web_tv.geant.feedprocesser" class="Pumukit\Up2u\WebTVBundle\Services\FeedProcesserService">
         </service>
 
-        <service id="pumukit_web_tv.geant.feedsync" class="Pumukit\Geant\WebTVBundle\Services\FeedSyncService">
+        <service id="pumukit_web_tv.geant.feedsync" class="Pumukit\Up2u\WebTVBundle\Services\FeedSyncService">
             <argument type="service" id="pumukitschema.factory" />
             <argument type="service" id="pumukitschema.tag" />
             <argument type="service" id="pumukitschema.person" />
@@ -25,11 +25,11 @@
             <argument type="service" id="kernel"/>
         </service>
 
-        <service id="pumukitschema.announce" class="Pumukit\Geant\WebTVBundle\Services\AnnounceService">
+        <service id="pumukitschema.announce" class="Pumukit\Up2u\WebTVBundle\Services\AnnounceService">
             <argument type="service" id="doctrine_mongodb.odm.document_manager"/>
         </service>
 
-        <service id="pumukit_web_tv.geantfilter" class="Pumukit\Geant\WebTVBundle\EventListener\FilterListener">
+        <service id="pumukit_web_tv.geantfilter" class="Pumukit\Up2u\WebTVBundle\EventListener\FilterListener">
             <argument type="service" id="doctrine_mongodb.odm.document_manager" />
             <tag name="kernel.event_listener" event="kernel.controller"/>
         </service>
