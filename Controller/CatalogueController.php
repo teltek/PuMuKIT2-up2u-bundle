@@ -14,12 +14,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class CatalogueController extends Controller
 {
     /**
-     * @Route("/catalog/by_repository", name="pumukit_geant_webtv_repositorycatalogue")
+     * @Route("/catalog/by_repository", name="pumukit_up2u_webtv_repositorycatalogue")
      * @Template()
      */
     public function indexAction(Request $request)
     {
-        $this->container->get('pumukit_webtv.breadcrumbs')->addList('Repository Catalogue','pumukit_geant_webtv_repositorycatalogue');
+        $this->container->get('pumukit_webtv.breadcrumbs')->addList('Repository Catalogue','pumukit_up2u_webtv_repositorycatalogue');
         $mmobjRepo = $this->get('doctrine_mongodb')->getRepository('PumukitSchemaBundle:MultimediaObject');
         $seriesRepo = $this->get('doctrine_mongodb')->getRepository('PumukitSchemaBundle:Series');
         $tagsRepo = $this->get('doctrine_mongodb')->getRepository('PumukitSchemaBundle:Tag');

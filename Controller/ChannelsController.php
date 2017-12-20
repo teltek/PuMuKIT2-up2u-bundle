@@ -33,7 +33,7 @@ class ChannelsController extends Controller
         }
 
         $title = $this->categories[$category]['title'];
-        $this->get('pumukit_web_tv.breadcrumbs')->addList($title, 'pumukit_geant_webtv_channels_multimediaobjects', array('category' => $category));
+        $this->get('pumukit_web_tv.breadcrumbs')->addList($title, 'pumukit_up2u_webtv_channels_multimediaobjects', array('category' => $category));
 
         
         // --- Get Tag Parent for Tag Fields ---
