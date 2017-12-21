@@ -17,6 +17,9 @@ class FilterListener
 
     public function onKernelController(FilterControllerEvent $event)
     {
+        /**
+         * To improve performance in the Geant/Up2u pumukit don't use criterias from the base WebTV FilterListener.
+         */
         $req = $event->getRequest();
         $routeParams = $req->attributes->get('_route_params');
         $isFilterActivated = (!isset($routeParams['filter']) || $routeParams['filter']);
