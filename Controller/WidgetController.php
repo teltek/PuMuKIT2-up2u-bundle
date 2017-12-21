@@ -11,6 +11,35 @@ use Pumukit\WebTVBundle\Controller\WidgetController as BaseWidgetController;
 class WidgetController extends BaseWidgetController
 {
     /**
+     * No execute Live and Event queries.
+     */
+    protected function getMenuParameters()
+    {
+        $channels = array();
+        $events = array();
+        $selected = $this->container->get('request_stack')->getMasterRequest()->get('_route');
+
+        $menuStats = $this->container->getParameter('menu.show_stats');
+        $homeTitle = $this->container->getParameter('menu.home_title');
+        $announcesTitle = $this->container->getParameter('menu.announces_title');
+        $searchTitle = $this->container->getParameter('menu.search_title');
+        $mediatecaTitle = $this->container->getParameter('menu.mediateca_title');
+        $categoriesTitle = $this->container->getParameter('menu.categories_title');
+
+        return array(
+            'live_events' => $events,
+            'live_channels' => $channels,
+            'menu_selected' => $selected,
+            'menu_stats' => $menuStats,
+            'home_title' => $homeTitle,
+            'announces_title' => $announcesTitle,
+            'search_title' => $searchTitle,
+            'mediateca_title' => $mediatecaTitle,
+            'categories_title' => $categoriesTitle,
+        );
+    }
+
+    /**
      * @Template()
      */
     public function tracksLanguagesAction()
