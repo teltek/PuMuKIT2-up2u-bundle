@@ -36,7 +36,9 @@ class FeedSyncService
     private $optWall; //If true, prints warnings.
 
     private $VIDEO_EXTENSIONS = array('mp4', 'm4v', 'm4b', 'flv');
+    private $VIDEO_MIMETYPES = array('mp4' => 'video/mp4', 'm4v' => 'video/mp4', 'm4b' => 'video/mp4', 'flv' => 'video/x-flv');
     private $AUDIO_EXTENSIONS = array('mp3', 'm4a', 'wav', 'ogg');
+    private $AUDIO_MIMETYPES = array('mp3' => 'audio/mp3', 'm4a' => 'audio/m4a', 'wav' => 'audio/wav', 'ogg' => 'audio/ogg');
 
     public function __construct(FactoryService $factoryService, TagService $tagService, PersonService $personService, MultimediaObjectPicService $mmsPicService, FeedSyncClientService $feedClientService,
                                 FeedProcesserService $feedProcesserService,  DocumentManager $dm, $dataFolder)
@@ -429,12 +431,19 @@ class FeedSyncService
             $mmobj->setProperty('redirect', false);
             $mmobj->setProperty('iframeable', false);
             $mmobj->setProperty('geant_type', 'video');
+            $extension = ($formatType == 'video' && in_array($formatExtension, $this->VIDEO_EXTENSIONS)) ? $formatExtension : $urlExtension;
+            $mimeType = isset($this->VIDEO_MIMETYPES[$extension]) ? $this->VIDEO_MIMETYPES[$extension] : "";
+            $track->setMimeType($mimeType);
         } elseif (($formatType == 'audio' && in_array($formatExtension, $this->AUDIO_EXTENSIONS)) || in_array($urlExtension, $this->AUDIO_EXTENSIONS)) {
             $track->addTag('display');
             $track->setOnlyAudio(true);
             $mmobj->setProperty('redirect', false);
             $mmobj->setProperty('iframeable', false);
             $mmobj->setProperty('geant_type', 'audio');
+            $extension = ($formatType == 'audio' && in_array($formatExtension, $this->AUDIO_EXTENSIONS)) ? $formatExtension : $urlExtension;
+            $mimeType = isset($this->AUDIO_MIMETYPES[$extension]) ? $this->AUDIO_MIMETYPES[$extension] : "";
+            $track->setMimeType($mimeType);
+
         } else {
             //We try to create an embed Url. If we can't, it returns false and we'll redirect instead. (When other repositories provides more embedded urls we will change this)
             $embedUrl = $this->feedProcesser->getEmbedUrl($url);
