@@ -417,9 +417,10 @@ class FeedSyncService
         $track->addTag('geant_track');
         $track->setLanguage($parsedTerena['language']);
         $track->setDuration($parsedTerena['duration']);
-        $track->setVcodec($parsedTerena['track_format']);
         $track->setPath($url);
         $track->setUrl($url);
+
+        $mmobj->setProperty('geant_track_format', $parsedTerena['track_format']);
 
         $format = explode('/', $parsedTerena['track_format']);
         $formatType = isset($format[0]) ? $format[0] : null;
@@ -434,6 +435,7 @@ class FeedSyncService
             $extension = ($formatType == 'video' && in_array($formatExtension, $this->VIDEO_EXTENSIONS)) ? $formatExtension : $urlExtension;
             $mimeType = isset($this->VIDEO_MIMETYPES[$extension]) ? $this->VIDEO_MIMETYPES[$extension] : "";
             $track->setMimeType($mimeType);
+            $track->setVcodec('h264');
         } elseif (($formatType == 'audio' && in_array($formatExtension, $this->AUDIO_EXTENSIONS)) || in_array($urlExtension, $this->AUDIO_EXTENSIONS)) {
             $track->addTag('display');
             $track->setOnlyAudio(true);
