@@ -173,13 +173,16 @@ class SearchController extends ParentController
         );
 
         foreach ($facetedResults as $result) {
-            if ($result['_id'] < 5 * 60) {
+            if ($result['_id'] <= 5 * 60) {
                 $faceted[-5] += $result['count'];
-            } elseif ($result['_id'] < 10 * 60) {
+            }
+            if ($result['_id'] <= 10 * 60) {
                 $faceted[-10] += $result['count'];
-            } elseif ($result['_id'] < 30 * 60) {
+            }
+            if ($result['_id'] <= 30 * 60) {
                 $faceted[-30] += $result['count'];
-            } elseif ($result['_id'] < 60 * 60) {
+            }
+            if ($result['_id'] <= 60 * 60) {
                 $faceted[-60] += $result['count'];
             } else {
                 $faceted[+60] += $result['count'];
