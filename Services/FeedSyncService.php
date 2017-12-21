@@ -428,11 +428,13 @@ class FeedSyncService
             $track->setOnlyAudio(false);
             $mmobj->setProperty('redirect', false);
             $mmobj->setProperty('iframeable', false);
+            $mmobj->setProperty('geant_type', 'video');
         } elseif (($formatType == 'audio' && in_array($formatExtension, $this->AUDIO_EXTENSIONS)) || in_array($urlExtension, $this->AUDIO_EXTENSIONS)) {
             $track->addTag('display');
             $track->setOnlyAudio(true);
             $mmobj->setProperty('redirect', false);
             $mmobj->setProperty('iframeable', false);
+            $mmobj->setProperty('geant_type', 'audio');
         } else {
             //We try to create an embed Url. If we can't, it returns false and we'll redirect instead. (When other repositories provides more embedded urls we will change this)
             $embedUrl = $this->feedProcesser->getEmbedUrl($url);
@@ -442,11 +444,13 @@ class FeedSyncService
                 $mmobj->setProperty('iframeable', true);
                 $mmobj->setProperty('redirect', false);
                 $mmobj->setProperty('iframe_url', $embedUrl);
+                $mmobj->setProperty('geant_type', 'embedded');
             } else {
                 $mmobj->setProperty('opencast', true); //Workaround to prevent editing the Schema Filter for now.
                 $mmobj->setProperty('redirect', true);
                 $mmobj->setProperty('iframeable', false);
                 $mmobj->setProperty('redirect_url', $url);
+                $mmobj->setProperty('geant_type', 'link');
             }
         }
         $this->dm->persist($track);

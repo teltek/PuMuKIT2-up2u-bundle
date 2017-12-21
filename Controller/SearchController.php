@@ -44,7 +44,7 @@ class SearchController extends ParentController
         // --- Create QueryBuilder ---
         $queryBuilder = $this->createMultimediaObjectQueryBuilder();
         $queryBuilder = $this->searchQueryBuilder($queryBuilder, $searchFound);
-        $queryBuilder = $this->typeQueryBuilder($queryBuilder, $typeFound);
+        $queryBuilder = $this->geantTypeQueryBuilder($queryBuilder, $typeFound);
         $queryBuilder = $this->durationQueryBuilder($queryBuilder, $durationFound);
         $queryBuilder = $this->dateQueryBuilder($queryBuilder, $startFound, $endFound, $yearFound);
         $queryBuilder = $this->languageQueryBuilder($queryBuilder, $languageFound);
@@ -61,7 +61,7 @@ class SearchController extends ParentController
         // --- Query to get existing languages, years, types... ---
         $searchLanguages = $this->getMmobjsLanguages($queryBuilder);
         $searchYears = $this->getMmobjsYears($queryBuilder);
-        $searchTypes = $this->getMmobjsTypes($queryBuilder);
+        $searchTypes = $this->getMmobjsGeantTypes($queryBuilder);
         $searchDuration = $this->getMmobjsDuration($queryBuilder);
         $searchTags = $this->getMmobjsTags($queryBuilder);
 
@@ -85,6 +85,15 @@ class SearchController extends ParentController
             'search_years' => $searchYears,
             'total_objects' => $totalObjects,
         );
+    }
+
+    protected function geantTypeQueryBuilder($queryBuilder, $typeFound)
+    {
+        if ($typeFound != '') {
+            $queryBuilder->field('properties.geant_type')->equals($typeFound);
+        }
+
+        return $queryBuilder;
     }
 
     protected function getMmobjsLanguages($queryBuilder = null)
@@ -225,6 +234,11 @@ class SearchController extends ParentController
         }
 
         return $faceted;
+    }
+
+    protected function getMmobjsGeantTypes($queryBuilder = null)
+    {
+        return $this->getMmobjsFaceted('$properties.geant_type', $queryBuilder);
     }
 
     protected function getMmobjsTypes($queryBuilder = null)

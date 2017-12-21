@@ -61,8 +61,9 @@
                 <label for="type">{% trans %}Format{% endtrans %}</label>
                 <select id="type" name="type" class="form-control"  onchange="submitForm(this);">
                     <option value="" {% if app.request.query.get('type') == "" %} selected="selected" {% endif %}>{% trans %}Any{% endtrans %}</option>
-                    <option {% if app.request.query.get('type') == "Video" %} selected="selected" {% endif %}>{% trans %}Video{% endtrans %} ({{ types[0]|default(0) }})</option>
-                    <option {% if app.request.query.get('type') == "Audio" %} selected="selected" {% endif %}>{% trans %}Audio{% endtrans %} ({{ types[1]|default(0) }})</option>
+                    {% for type, count in types if type != "" %}
+                    <option value="{{type}}" {% if app.request.query.get('type') == type %} selected="selected" {% endif %}>{{ type|capitalize|trans }} ({{ count }})</option>
+                    {% endfor %}
                 </select>
             </div>
     <div class="row">
