@@ -82,7 +82,7 @@ class FeedProcesserService
         if (isset($geantFeedObject['expressions']['manifestations']['thumbnail'])) {
             $processedObject['thumbnail'] = $geantFeedObject['expressions']['manifestations']['thumbnail'];
         } else {
-            $processedObject['thumbnail'] = '/bundles/pumukitgeantwebtv/images/no_image.jpg';
+            $processedObject['thumbnail'] = '/bundles/pumukitup2uwebtv/images/no_image.jpg';
         }
         $processedObject['tags'] = $this->retrieveTagCodes($geantFeedObject);
         $processedObject['people'] = $this->retrievePeople($geantFeedObject);

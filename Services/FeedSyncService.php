@@ -503,7 +503,7 @@ class FeedSyncService
             return;
         }
         $providers = $providerTag->getChildren();
-        $defaultThumbnail = 'bundles/pumukitgeantwebtv/images/repositories/default_picture.png';
+        $defaultThumbnail = 'bundles/pumukitup2uwebtv/images/repositories/default_picture.png';
 
         //Progress bar init.
         $total = count($providers);
@@ -544,7 +544,7 @@ class FeedSyncService
         if (strpos($thumbUrl, 'http') !== false) {
             return $thumbUrl;
         } else {
-            return '/bundles/pumukitgeantwebtv/images/repositories/'.$thumbUrl;
+            return '/bundles/pumukitup2uwebtv/images/repositories/'.$thumbUrl;
         }
     }
 
