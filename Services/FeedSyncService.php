@@ -455,13 +455,13 @@ class FeedSyncService
                 $mmobj->setProperty('iframeable', true);
                 $mmobj->setProperty('redirect', false);
                 $mmobj->setProperty('iframe_url', $embedUrl);
-                $mmobj->setProperty('geant_type', 'embedded');
+                $mmobj->setProperty('geant_type', 'external player');
             } else {
                 $mmobj->setProperty('opencast', true); //Workaround to prevent editing the Schema Filter for now.
                 $mmobj->setProperty('redirect', true);
                 $mmobj->setProperty('iframeable', false);
                 $mmobj->setProperty('redirect_url', $url);
-                $mmobj->setProperty('geant_type', 'link');
+                $mmobj->setProperty('geant_type', 'external link');
             }
         }
         $this->dm->persist($track);
