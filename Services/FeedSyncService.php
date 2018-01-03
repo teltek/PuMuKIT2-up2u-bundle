@@ -267,7 +267,7 @@ class FeedSyncService
         //We assume the 'provider' property of a feed won't change for the same Geant Feed Resource.
         //If it changes, the mmobj would keep it's original provider.
         if (!isset($mmobj)) {
-            $mmobj = $factory->createMultimediaObject($series, false);
+            $mmobj = $factory->doCreateMultimediaObject($series, false);
             $mmobj->setProperty('geant_id', $parsedTerena['identifier']);
             $mmobj->setProperty('geant_tag', $tag);
             $mmobj->setProperty('feed_updated_date', $parsedTerena['lastUpdateDate']);
