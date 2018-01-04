@@ -117,8 +117,7 @@ class FeedSyncService
             $series = $this->seriesRepo->findOneBySeriesProperty('geant_provider', $tag->getCod());
             if ($series) {
                 $numMmobjs = $this->mmobjRepo->createBuilderWithSeries($series)
-                           ->field('status')
-                           ->equals(MultimediaObject::STATUS_PUBLISHED)
+                           ->field('status')->notEqual(MultimediaObject::STATUS_PROTOTYPE)
                            ->count()
                            ->getQuery()->execute();
 
