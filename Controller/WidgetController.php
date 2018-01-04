@@ -44,22 +44,30 @@ class WidgetController extends BaseWidgetController
      */
     public function tracksLanguagesAction()
     {
-        $mmoRepo = $this->get('doctrine_mongodb.odm.document_manager')->getDocumentCollection('PumukitSchemaBundle:MultimediaObject');
-        $status = array(MultimediaObject::STATUS_PUBLISHED);
+        $dm = $this->get('doctrine_mongodb')->getManager();
+        $mmObjColl = $dm->getDocumentCollection('PumukitSchemaBundle:MultimediaObject');
+        $mmObjRepo = $dm->getRepository('PumukitSchemaBundle:MultimediaObject');
+        $criteria = $dm->getFilterCollection()->getFilterCriteria($mmObjRepo->getClassMetadata());
 
         $command = array();
-        $command[] = array('$match' => array(
-            'status' => array('$in' => $status),
-            'tracks.hide' => false,
-            'tags.cod' => 'PUCHWEBTV',
-            ));
-        $command[] = array('$group' => array(
-            '_id' => '$tracks.language',
-            'count' => array('$sum' => 1),
-        ));
-        $command[] = array('$sort' => array('_id' => -1));
 
-        $aggregation = $mmoRepo->aggregate($command);
+        unset($criteria['tracks.language']);
+        if ($criteria) {
+            $command[] = array(
+                '$match' => $criteria,
+            );
+        }
+        $command[] = array(
+            '$group' => array(
+                '_id' => '$tracks.language',
+                'count' => array('$sum' => 1),
+            )
+        );
+        $command[] = array(
+            '$sort' => array('_id' => -1)
+        );
+
+        $aggregation = $mmObjColl->aggregate($command);
 
         return array('tracks_languages' => $aggregation);
     }
