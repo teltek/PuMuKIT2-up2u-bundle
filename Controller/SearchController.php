@@ -13,11 +13,17 @@ use Pumukit\WebTVBundle\Controller\SearchController as ParentController;
 class SearchController extends ParentController
 {
     /**
-     * @Route("/searchmultimediaobjects/{tagCod}/{useTagAsGeneral}",
-     defaults={"tagCod": null, "useTagAsGeneral": false},
-     name="pumukit_webtv_search_multimediaobjects")
+     * @Route("/searchmultimediaobjects/{tagCod}/{useTagAsGeneral}", defaults={"tagCod": null, "useTagAsGeneral": false}, name="pumukit_webtv_search_multimediaobjects")
      * @ParamConverter("blockedTag", class="PumukitSchemaBundle:Tag", options={"mapping": {"tagCod": "cod"}})
      * @Template("PumukitWebTVBundle:Search:index.html.twig")
+     *
+     * @param Request  $request
+     * @param Tag|null $blockedTag
+     * @param bool     $useTagAsGeneral
+     *
+     * @return array
+     *
+     * @throws \Exception
      */
     public function multimediaObjectsAction(Request $request, Tag $blockedTag = null, $useTagAsGeneral = false)
     {
@@ -59,7 +65,7 @@ class SearchController extends ParentController
         $pagerfanta = $this->createPager($queryBuilder, $request->query->get('page', 1));
 
         // --- Query to get existing languages, years, types... ---
-        $searchLanguages = $this->getMmobjsLanguages($queryBuilder);
+        $searchLanguages = $this->getMmobjsLanguages($queryBuilder, $languageFound);
         $searchYears = $this->getMmobjsYears($queryBuilder);
         $searchTypes = $this->getMmobjsGeantTypes($queryBuilder);
         $searchDuration = $this->getMmobjsDuration($queryBuilder);
@@ -96,10 +102,8 @@ class SearchController extends ParentController
         return $queryBuilder;
     }
 
-    protected function getMmobjsLanguages($queryBuilder = null)
+    protected function getMmobjsLanguages($queryBuilder = null, $languageFound = null)
     {
-        //return $this->getMmobjsFaceted(array('$year' => '$tracks.language'), $queryBuilder);
-
         $dm = $this->get('doctrine_mongodb')->getManager();
         $mmObjColl = $dm->getDocumentCollection('PumukitSchemaBundle:MultimediaObject');
         $mmObjRepo = $dm->getRepository('PumukitSchemaBundle:MultimediaObject');
@@ -119,28 +123,28 @@ class SearchController extends ParentController
             $pipeline[] = array('$match' => $criteria);
         }
 
-        $pipeline[] = array('$group' => array('_id' => '$tracks.language', 'count' => array('$sum' => 1)));
+        $pipeline[] = array('$unwind' => '$tracks');
+        if ($languageFound) {
+            $pipeline[] = array('$match' => array('tracks.language' => $languageFound));
+        }
+
+        $pipeline[] = array('$match' => array('tracks.tags' => 'display'));
+        $pipeline[] = array('$group' => array('_id' => array('language' => '$tracks.language', 'mmoid' => '$_id')));
+
+        $pipeline[] = array('$group' => array('_id' => '$_id.language', 'count' => array('$sum' => 1)));
         $pipeline[] = array('$sort' => array('_id' => 1));
 
         $languageResults = $mmObjColl->aggregate($pipeline);
 
         $languages = array();
         foreach ($languageResults as $language) {
-            if (!isset($languages[$language['_id'][0]])) {
-                $languages[$language['_id'][0]] = 0;
+            if (!isset($languages[$language['_id']])) {
+                $languages[$language['_id']] = 0;
             }
-            $languages[$language['_id'][0]] += $language['count'];
+            $languages[$language['_id']] += $language['count'];
         }
 
         return $languages;
-
-        /*
-        return $searchLanguages = $this->get('doctrine_mongodb')
-        ->getRepository('PumukitSchemaBundle:MultimediaObject')
-        ->createStandardQueryBuilder()
-        ->distinct('tracks.language')
-        ->getQuery()->execute();
-        */
     }
 
     protected function getMmobjsYears($queryBuilder = null)
@@ -170,7 +174,6 @@ class SearchController extends ParentController
         }
 
         $pipeline[] = array('$group' => array('_id' => '$duration', 'count' => array('$sum' => 1)));
-        //$pipeline[] = array('$sort' => array('_id' => 1));
 
         $facetedResults = $mmObjColl->aggregate($pipeline);
         $faceted = array(
@@ -225,7 +228,6 @@ class SearchController extends ParentController
         $pipeline[] = array('$project' => array('_id' => '$tags.cod'));
         $pipeline[] = array('$unwind' => '$_id');
         $pipeline[] = array('$group' => array('_id' => '$_id', 'count' => array('$sum' => 1)));
-        //$pipeline[] = array('$sort' => array('_id' => 1));
 
         $facetedResults = $mmObjColl->aggregate($pipeline);
         $faceted = array();
@@ -239,46 +241,6 @@ class SearchController extends ParentController
     protected function getMmobjsGeantTypes($queryBuilder = null)
     {
         return $this->getMmobjsFaceted('$properties.geant_type', $queryBuilder);
-    }
-
-    protected function getMmobjsTypes($queryBuilder = null)
-    {
-        //return $this->getMmobjsFaceted(array('$year' => '$tracks.only_audio'), $queryBuilder);
-
-        $dm = $this->get('doctrine_mongodb')->getManager();
-        $mmObjColl = $dm->getDocumentCollection('PumukitSchemaBundle:MultimediaObject');
-        $mmObjRepo = $dm->getRepository('PumukitSchemaBundle:MultimediaObject');
-        $criteria = $dm->getFilterCollection()->getFilterCriteria($mmObjRepo->getClassMetadata());
-
-        if ($queryBuilder) {
-            $pipeline = array(
-                array('$match' => $queryBuilder->getQueryArray()),
-            );
-        } else {
-            $pipeline = array(
-                array('$match' => array('status' => MultimediaObject::STATUS_PUBLISHED)),
-            );
-        }
-
-        if ($criteria) {
-            $pipeline[] = array('$match' => $criteria);
-        }
-
-        $pipeline[] = array('$group' => array('_id' => '$tracks.only_audio', 'count' => array('$sum' => 1)));
-        $pipeline[] = array('$sort' => array('_id' => 1));
-
-        $typeResults = $mmObjColl->aggregate($pipeline);
-        $types = array();
-        foreach ($typeResults as $type) {
-            if (isset($type['_id'][0])) {
-                if (!isset($types[$type['_id'][0]])) {
-                    $types[$type['_id'][0]] = 0;
-                }
-                $types[$type['_id'][0]] += $type['count'];
-            }
-        }
-
-        return $types;
     }
 
     protected function getMmobjsFaceted($idGroup, $queryBuilder = null)
