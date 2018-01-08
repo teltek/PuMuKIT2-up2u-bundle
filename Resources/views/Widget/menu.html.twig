@@ -37,7 +37,9 @@
 </div>
 {% endif %}
 
+{% if 'searchmultimediaobjects' not in app.request.server.get('DOCUMENT_URI') %}
 <div class="row widget" style="margin-top:10px;">
   <h4>View only</h4>
   {% render(controller('PumukitUp2uWebTVBundle:Widget:tracksLanguages')) %}
 </div>
+{% endif %}
