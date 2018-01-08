@@ -149,7 +149,7 @@ class SearchController extends ParentController
 
     protected function getMmobjsYears($queryBuilder = null)
     {
-        return $this->getMmobjsFaceted(array('$year' => '$record_date'), $queryBuilder);
+        return $this->getMmobjsFaceted(array('$year' => '$record_date'), $queryBuilder, $sort = -1);
     }
 
     protected function getMmobjsDuration($queryBuilder)
@@ -243,7 +243,7 @@ class SearchController extends ParentController
         return $this->getMmobjsFaceted('$properties.geant_type', $queryBuilder);
     }
 
-    protected function getMmobjsFaceted($idGroup, $queryBuilder = null)
+    protected function getMmobjsFaceted($idGroup, $queryBuilder = null, $sort = 1)
     {
         $dm = $this->get('doctrine_mongodb')->getManager();
         $mmObjColl = $dm->getDocumentCollection('PumukitSchemaBundle:MultimediaObject');
@@ -265,7 +265,7 @@ class SearchController extends ParentController
         }
 
         $pipeline[] = array('$group' => array('_id' => $idGroup, 'count' => array('$sum' => 1)));
-        $pipeline[] = array('$sort' => array('_id' => 1));
+        $pipeline[] = array('$sort' => array('_id' => $sort));
 
         $facetedResults = $mmObjColl->aggregate($pipeline);
         $faceted = array();
