@@ -35,6 +35,12 @@ class SearchController extends ParentController
         // --- Get Tag Parent for Tag Fields ---
         $parentTag = $this->getParentTag();
         $parentTagOptional = $this->getOptionalParentTag();
+
+        $aChildrenTagOptional = array();
+        foreach ($parentTagOptional->getChildren() as $children) {
+            $aChildrenTagOptional[$children->getTitle()] = $children;
+        }
+        ksort($aChildrenTagOptional);
         // --- END Get Tag Parent for Tag Fields ---
 
         // --- Get Variables ---
@@ -81,6 +87,7 @@ class SearchController extends ParentController
             'objects' => $pagerfanta,
             'parent_tag' => $parentTag,
             'parent_tag_optional' => $parentTagOptional,
+            'children_tag_optional' => $aChildrenTagOptional,
             'tags_found' => $tagsFound,
             'number_cols' => $numberCols,
             'languages' => $searchLanguages,

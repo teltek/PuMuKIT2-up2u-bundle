@@ -3,15 +3,15 @@
     <input type="submit" style="display:none"/>
 
     {% if parent_tag_optional is not null and ( blocked_tag is null or not blocked_tag.isDescendantOf(parent_tag_optional)) %}
-    <div class="form-group col-md-2 col-sm-3 col-xs-6">
-        <label for="tags">{{ parent_tag_optional.title|trans}}</label>
-        <select id="tags" name="tags[]" class="form-control" onchange="submitForm(this);">
-            <option value="" {% if tags_found == "" %} selected="selected" {% endif %}>Any</option>
-            {% for tag in parent_tag_optional.children if (tag.title != "" and not tag.getProperty('empty',false) and tags[tag.cod] is defined) %}
-            <option value="{{tag.cod}}" {% if tag.cod in tags_found %} selected="selected" {% endif %}>{{ tag.title }} ({{ tags[tag.cod]|default(0) }})</option>
-            {% endfor %}
-        </select>
-    </div>
+        <div class="form-group col-md-2 col-sm-3 col-xs-6">
+            <label for="tags">{{ parent_tag_optional.title|trans}}</label>
+            <select id="tags" name="tags[]" class="form-control" onchange="submitForm(this);">
+                <option value="" {% if tags_found == "" %} selected="selected" {% endif %}>Any</option>
+                {% for key, tag in children_tag_optional if (tag.title != "" and not tag.getProperty('empty',false) and tags[tag.cod] is defined) %}
+                <option value="{{tag.cod}}" {% if tag.cod in tags_found %} selected="selected" {% endif %}>{{ tag.title }} ({{ tags[tag.cod]|default(0) }})</option>
+                {% endfor %}
+            </select>
+        </div>
     {% endif %}
 
     {% if parent_tag is not null and (blocked_tag is null or not blocked_tag.isDescendantOf(parent_tag) )%}
