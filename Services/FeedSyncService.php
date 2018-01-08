@@ -41,7 +41,7 @@ class FeedSyncService
     private $AUDIO_MIMETYPES = array('mp3' => 'audio/mp3', 'm4a' => 'audio/m4a', 'wav' => 'audio/wav', 'ogg' => 'audio/ogg');
 
     public function __construct(FactoryService $factoryService, TagService $tagService, PersonService $personService, MultimediaObjectPicService $mmsPicService, FeedSyncClientService $feedClientService,
-                                FeedProcesserService $feedProcesserService,  DocumentManager $dm, $dataFolder)
+                                FeedProcesserService $feedProcesserService, DocumentManager $dm, $dataFolder)
     {
         //Schema Services
         $this->factoryService = $factoryService;
@@ -432,7 +432,7 @@ class FeedSyncService
             $mmobj->setProperty('iframeable', false);
             $mmobj->setProperty('geant_type', 'video');
             $extension = ($formatType == 'video' && in_array($formatExtension, $this->VIDEO_EXTENSIONS)) ? $formatExtension : $urlExtension;
-            $mimeType = isset($this->VIDEO_MIMETYPES[$extension]) ? $this->VIDEO_MIMETYPES[$extension] : "";
+            $mimeType = isset($this->VIDEO_MIMETYPES[$extension]) ? $this->VIDEO_MIMETYPES[$extension] : '';
             $track->setMimeType($mimeType);
             $track->setVcodec('h264');
         } elseif (($formatType == 'audio' && in_array($formatExtension, $this->AUDIO_EXTENSIONS)) || in_array($urlExtension, $this->AUDIO_EXTENSIONS)) {
@@ -442,9 +442,8 @@ class FeedSyncService
             $mmobj->setProperty('iframeable', false);
             $mmobj->setProperty('geant_type', 'audio');
             $extension = ($formatType == 'audio' && in_array($formatExtension, $this->AUDIO_EXTENSIONS)) ? $formatExtension : $urlExtension;
-            $mimeType = isset($this->AUDIO_MIMETYPES[$extension]) ? $this->AUDIO_MIMETYPES[$extension] : "";
+            $mimeType = isset($this->AUDIO_MIMETYPES[$extension]) ? $this->AUDIO_MIMETYPES[$extension] : '';
             $track->setMimeType($mimeType);
-
         } else {
             //We try to create an embed Url. If we can't, it returns false and we'll redirect instead. (When other repositories provides more embedded urls we will change this)
             $embedUrl = $this->feedProcesser->getEmbedUrl($url);
@@ -454,7 +453,7 @@ class FeedSyncService
                 $mmobj->setProperty('iframeable', true);
                 $mmobj->setProperty('redirect', false);
                 $mmobj->setProperty('iframe_url', $embedUrl);
-                $mmobj->setProperty('geant_type', 'external player');
+                $mmobj->setProperty('geant_type', 'external video player');
             } else {
                 $mmobj->setProperty('opencast', true); //Workaround to prevent editing the Schema Filter for now.
                 $mmobj->setProperty('redirect', true);
@@ -482,9 +481,9 @@ class FeedSyncService
         }
     }
 
-/**
- * Prints on screen an estimated duration of the script and statistics about its execution.
- */
+    /**
+     * Prints on screen an estimated duration of the script and statistics about its execution.
+     */
     //TODO USE Symfony Progress Bar: http://symfony.com/doc/current/components/console/helpers/progressbar.html
     protected function showProgressEstimateDuration($time_started, $processed, $total, $progressBar = null)
     {
