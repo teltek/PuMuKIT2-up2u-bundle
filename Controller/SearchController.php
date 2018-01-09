@@ -109,15 +109,19 @@ class SearchController extends ParentController
                 $queryBuilder->field('duration')->equals(0);
             }
             if ($durationFound == '-5') {
+                $queryBuilder->field('duration')->gt(0);
                 $queryBuilder->field('duration')->lte(300);
             }
             if ($durationFound == '-10') {
+                $queryBuilder->field('duration')->gt(300);
                 $queryBuilder->field('duration')->lte(600);
             }
             if ($durationFound == '-30') {
+                $queryBuilder->field('duration')->gt(600);
                 $queryBuilder->field('duration')->lte(1800);
             }
             if ($durationFound == '-60') {
+                $queryBuilder->field('duration')->gt(1800);
                 $queryBuilder->field('duration')->lte(3600);
             }
             if ($durationFound == '+60') {
