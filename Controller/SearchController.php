@@ -109,6 +109,36 @@ class SearchController extends ParentController
         return $queryBuilder;
     }
 
+    protected function durationQueryBuilder($queryBuilder, $durationFound)
+    {
+        if ($durationFound != '') {
+            if ($durationFound == '0') {
+                $queryBuilder->field('duration')->equals(0);
+            }
+            if ($durationFound == '-5') {
+                $queryBuilder->field('duration')->gt(0);
+                $queryBuilder->field('duration')->lte(300);
+            }
+            if ($durationFound == '-10') {
+                $queryBuilder->field('duration')->gt(300);
+                $queryBuilder->field('duration')->lte(600);
+            }
+            if ($durationFound == '-30') {
+                $queryBuilder->field('duration')->gt(600);
+                $queryBuilder->field('duration')->lte(1800);
+            }
+            if ($durationFound == '-60') {
+                $queryBuilder->field('duration')->gt(1800);
+                $queryBuilder->field('duration')->lte(3600);
+            }
+            if ($durationFound == '+60') {
+                $queryBuilder->field('duration')->gt(3600);
+            }
+        }
+
+        return $queryBuilder;
+    }
+
     protected function getMmobjsLanguages($queryBuilder = null, $languageFound = null)
     {
         $dm = $this->get('doctrine_mongodb')->getManager();
@@ -184,6 +214,7 @@ class SearchController extends ParentController
 
         $facetedResults = $mmObjColl->aggregate($pipeline);
         $faceted = array(
+            0 => 0,
             -5 => 0,
             -10 => 0,
             -30 => 0,
@@ -192,19 +223,18 @@ class SearchController extends ParentController
         );
 
         foreach ($facetedResults as $result) {
-            if ($result['_id'] <= 5 * 60) {
-                $faceted[-5] += $result['count'];
-            }
-            if ($result['_id'] <= 10 * 60) {
-                $faceted[-10] += $result['count'];
-            }
-            if ($result['_id'] <= 30 * 60) {
-                $faceted[-30] += $result['count'];
-            }
-            if ($result['_id'] <= 60 * 60) {
-                $faceted[-60] += $result['count'];
-            } else {
+            if ($result['_id'] > 60 * 60) {
                 $faceted[+60] += $result['count'];
+            } elseif (($result['_id'] <= 60 * 60) and ($result['_id'] > 30 * 60)) {
+                $faceted[-60] += $result['count'];
+            } elseif (($result['_id'] <= 30 * 60) and ($result['_id'] > 10 * 60)) {
+                $faceted[-30] += $result['count'];
+            } elseif (($result['_id'] <= 10 * 60) and ($result['_id'] > 5 * 60)) {
+                $faceted[-10] += $result['count'];
+            } elseif (($result['_id'] <= 5 * 60) and ($result['_id'] > 0)) {
+                $faceted[-5] += $result['count'];
+            } else {
+                $faceted[0] += $result['count'];
             }
         }
 
