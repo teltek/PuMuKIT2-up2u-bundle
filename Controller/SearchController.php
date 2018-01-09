@@ -64,6 +64,8 @@ class SearchController extends ParentController
         $queryBuilder = $queryBuilder->sort('record_date', 'desc');
         // --- END Create QueryBuilder ---
 
+        $request->attributes->set('searchCriteria', $queryBuilder->getQueryArray());
+
         // --- Execute QueryBuilder count --
         $countQuery = clone $queryBuilder;
         $totalObjects = $countQuery->count()->getQuery()->execute();

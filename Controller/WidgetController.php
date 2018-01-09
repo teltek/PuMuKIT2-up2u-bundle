@@ -42,7 +42,7 @@ class WidgetController extends BaseWidgetController
     /**
      * @Template()
      */
-    public function tracksLanguagesAction()
+    public function tracksLanguagesAction(Request $request)
     {
         $dm = $this->get('doctrine_mongodb')->getManager();
         $mmObjColl = $dm->getDocumentCollection('PumukitSchemaBundle:MultimediaObject');
@@ -51,7 +51,12 @@ class WidgetController extends BaseWidgetController
 
         $command = array();
 
+        $requestStack = $this->container->get('request_stack');
+        $masterRequest = $requestStack->getMasterRequest();
+
         unset($criteria['tracks.language']);
+
+        $criteria = $masterRequest->attributes->get('searchCriteria', $criteria);
         if ($criteria) {
             $command[] = array(
                 '$match' => $criteria,
@@ -61,10 +66,10 @@ class WidgetController extends BaseWidgetController
             '$group' => array(
                 '_id' => '$tracks.language',
                 'count' => array('$sum' => 1),
-            )
+            ),
         );
         $command[] = array(
-            '$sort' => array('_id' => -1)
+            '$sort' => array('_id' => -1),
         );
 
         $aggregation = $mmObjColl->aggregate($command);
