@@ -69,6 +69,7 @@ class SearchController extends ParentController
         // --- Execute QueryBuilder count --
         $countQuery = clone $queryBuilder;
         $totalObjects = $countQuery->count()->getQuery()->execute();
+
         // --- Execute QueryBuilder and get paged results ---
         $pagerfanta = $this->createPager($queryBuilder, $request->query->get('page', 1));
 
@@ -78,6 +79,7 @@ class SearchController extends ParentController
         $searchTypes = $this->getMmobjsGeantTypes($queryBuilder);
         $searchDuration = $this->getMmobjsDuration($queryBuilder);
         $searchTags = $this->getMmobjsTags($queryBuilder);
+        $searchWithoutTags = $this->getMmobjsWithoutTags($queryBuilder);
 
         // -- Init Number Cols for showing results ---
         $numberCols = $this->container->getParameter('columns_objs_search');
@@ -97,6 +99,7 @@ class SearchController extends ParentController
             'types' => $searchTypes,
             'durations' => $searchDuration,
             'tags' => $searchTags,
+            'without_tags' => $searchWithoutTags,
             'search_years' => $searchYears,
             'total_objects' => $totalObjects,
         );
@@ -264,12 +267,48 @@ class SearchController extends ParentController
             $pipeline[] = array('$match' => $criteria);
         }
 
-        $pipeline[] = array('$project' => array('_id' => '$tags.cod'));
+        $pipeline[] = array('$project' => array('_id' => '$tags.cod', 'path' => '$tags.path'));
         $pipeline[] = array('$unwind' => '$_id');
         $pipeline[] = array('$group' => array('_id' => '$_id', 'count' => array('$sum' => 1)));
 
         $facetedResults = $mmObjColl->aggregate($pipeline);
         $faceted = array();
+        foreach ($facetedResults as $result) {
+            $faceted[$result['_id']] = $result['count'];
+        }
+
+        return $faceted;
+    }
+
+    protected function getMmobjsWithoutTags($queryBuilder = null)
+    {
+        $dm = $this->get('doctrine_mongodb')->getManager();
+        $mmObjColl = $dm->getDocumentCollection('PumukitSchemaBundle:MultimediaObject');
+        $mmObjRepo = $dm->getRepository('PumukitSchemaBundle:MultimediaObject');
+
+        $faceted = array();
+
+        $searchByTagCod = $this->container->getParameter('search.parent_tag.cod');
+
+        $parentTagCod = $dm->getRepository('PumukitSchemaBundle:Tag')->findOneBy(array('cod' => $searchByTagCod));
+        if (!$parentTagCod) {
+            return $faceted;
+        }
+        $criteria = $dm->getFilterCollection()->getFilterCriteria($mmObjRepo->getClassMetadata());
+
+        $pipeline = array();
+        if ($queryBuilder) {
+            $pipeline[] = array('$match' => $queryBuilder->getQueryArray());
+        }
+
+        if ($criteria) {
+            $pipeline[] = array('$match' => $criteria);
+        }
+
+        $pipeline[] = array('$match' => array('tags.cod' => array('$nin' => array($searchByTagCod))));
+        $pipeline[] = array('$group' => array('_id' => "$searchByTagCod", 'count' => array('$sum' => 1)));
+
+        $facetedResults = $mmObjColl->aggregate($pipeline);
         foreach ($facetedResults as $result) {
             $faceted[$result['_id']] = $result['count'];
         }
