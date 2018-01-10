@@ -66,12 +66,9 @@ class SearchController extends ParentController
 
         $request->attributes->set('searchCriteria', $queryBuilder->getQueryArray());
 
-        // --- Execute QueryBuilder count --
-        $countQuery = clone $queryBuilder;
-        $totalObjects = $countQuery->count()->getQuery()->execute();
-
         // --- Execute QueryBuilder and get paged results ---
         $pagerfanta = $this->createPager($queryBuilder, $request->query->get('page', 1));
+        $totalObjects = $pagerfanta->getNbResults();
 
         // --- Query to get existing languages, years, types... ---
         $searchLanguages = $this->getMmobjsLanguages($queryBuilder, $languageFound);
@@ -80,6 +77,8 @@ class SearchController extends ParentController
         $searchDuration = $this->getMmobjsDuration($queryBuilder);
         $searchTags = $this->getMmobjsTags($queryBuilder);
         $searchWithoutTags = $this->getMmobjsWithoutTags($queryBuilder);
+
+        $searchWithoutTags = $totalObjects - $searchWithoutTags;
 
         // -- Init Number Cols for showing results ---
         $numberCols = $this->container->getParameter('columns_objs_search');
@@ -285,16 +284,8 @@ class SearchController extends ParentController
         $dm = $this->get('doctrine_mongodb')->getManager();
         $mmObjColl = $dm->getDocumentCollection('PumukitSchemaBundle:MultimediaObject');
         $mmObjRepo = $dm->getRepository('PumukitSchemaBundle:MultimediaObject');
-
-        $faceted = array();
-
-        $searchByTagCod = $this->container->getParameter('search.parent_tag.cod');
-
-        $parentTagCod = $dm->getRepository('PumukitSchemaBundle:Tag')->findOneBy(array('cod' => $searchByTagCod));
-        if (!$parentTagCod) {
-            return $faceted;
-        }
         $criteria = $dm->getFilterCollection()->getFilterCriteria($mmObjRepo->getClassMetadata());
+        $searchByTagCod = $this->container->getParameter('search.parent_tag.cod');
 
         $pipeline = array();
         if ($queryBuilder) {
@@ -305,15 +296,16 @@ class SearchController extends ParentController
             $pipeline[] = array('$match' => $criteria);
         }
 
-        $pipeline[] = array('$match' => array('tags.cod' => array('$nin' => array($searchByTagCod))));
-        $pipeline[] = array('$group' => array('_id' => "$searchByTagCod", 'count' => array('$sum' => 1)));
+        $pipeline[] = array('$match' => array('tags.cod' => array('$eq' => $searchByTagCod)));
+        $pipeline[] = array('$group' => array('_id' => null, 'count' => array('$sum' => 1)));
 
+        $faceted = array();
         $facetedResults = $mmObjColl->aggregate($pipeline);
         foreach ($facetedResults as $result) {
             $faceted[$result['_id']] = $result['count'];
         }
 
-        return $faceted;
+        return reset($faceted);
     }
 
     protected function getMmobjsGeantTypes($queryBuilder = null)

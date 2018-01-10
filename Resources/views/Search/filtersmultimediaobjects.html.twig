@@ -19,8 +19,8 @@
         <label for="tags">{% trans %} Subject{% endtrans %}</label>
         <select id="tags" name="tags[]" class="form-control" onchange="submitForm(this);">
             <option value="" {% if tags_found == "" %} selected="selected" {% endif %}>Any</option>
-            {% if without_tags and without_tags|length > 0 %}
-                <option value="{{ parent_tag.cod }}" {% if parent_tag.cod in tags_found %} selected="selected" {% endif %}>{% trans %}Unknown{% endtrans %} ({{ without_tags[parent_tag.cod]|default(0) }})</option>
+            {% if without_tags > 0 %}
+                <option value="{{ parent_tag.cod }}" {% if parent_tag.cod in tags_found %} selected="selected" {% endif %}>{% trans %}Unknown{% endtrans %} ({{ without_tags }})</option>
             {% endif %}
             {% for tag in parent_tag.children if tag.title != "" and tags[tag.cod] is defined and tags[tag.cod] > 0 %}
                 <option value="{{tag.cod}}" {% if tag.cod in tags_found %} selected="selected" {% endif %}>{{ tag.title }} ({{ tags[tag.cod]|default(0) }})</option>
