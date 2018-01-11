@@ -71,13 +71,28 @@ class SearchController extends ParentController
         $totalObjects = $pagerfanta->getNbResults();
 
         // --- Query to get existing languages, years, types... ---
+        $microtime1 = $microtime(true);
         $searchLanguages = $this->getMmobjsLanguages($queryBuilder, $languageFound);
+        $microtime2 = $microtime(true);
         $searchYears = $this->getMmobjsYears($queryBuilder);
+        $microtime3 = $microtime(true);
         $searchTypes = $this->getMmobjsGeantTypes($queryBuilder);
+        $microtime4 = $microtime(true);
         $searchDuration = $this->getMmobjsDuration($queryBuilder);
-        $searchTags = $this->getMmobjsTags($queryBuilder, array($parentTag, $parentTagOptional));
+        $microtime5 = $microtime(true);
+        $searchTags = $this->getMmobjsTags($queryBuilder);
+        $microtime6 = $microtime(true);
         $searchWithoutTags = $this->getMmobjsWithoutTags($queryBuilder);
         $searchWithoutTags = $totalObjects - $searchWithoutTags;
+        $microtime7 = $microtime(true);
+
+        dump($microtime1);
+        dump($microtime2 - $microtime1);
+        dump($microtime3 - $microtime2);
+        dump($microtime4 - $microtime3);
+        dump($microtime5 - $microtime4);
+        dump($microtime6 - $microtime5);
+        dump($microtime7 - $microtime6);
 
         // -- Init Number Cols for showing results ---
         $numberCols = $this->container->getParameter('columns_objs_search');
@@ -245,7 +260,7 @@ class SearchController extends ParentController
         return $faceted;
     }
 
-    protected function getMmobjsTags($queryBuilder = null, $parents = null)
+    protected function getMmobjsTags($queryBuilder = null)
     {
         $dm = $this->get('doctrine_mongodb')->getManager();
         $mmObjColl = $dm->getDocumentCollection('PumukitSchemaBundle:MultimediaObject');
@@ -268,17 +283,6 @@ class SearchController extends ParentController
 
         $pipeline[] = array('$project' => array('_id' => '$tags.cod'));
         $pipeline[] = array('$unwind' => '$_id');
-
-        if ($parents) {
-            $childrenCod = array();
-            foreach ($parents[0]->getChildren() as $tag) {
-                $childrenCod[] = $tag->getCod();
-            }
-            foreach ($parents[1]->getChildren() as $tag) {
-                $childrenCod[] = $tag->getCod();
-            }
-            $pipeline[] = array('$match' => array('_id' => array('$in' => array_values($childrenCod))));
-        }
         $pipeline[] = array('$group' => array('_id' => '$_id', 'count' => array('$sum' => 1)));
 
         $facetedResults = $mmObjColl->aggregate($pipeline);
