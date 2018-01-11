@@ -66,18 +66,33 @@ class SearchController extends ParentController
 
         $request->attributes->set('searchCriteria', $queryBuilder->getQueryArray());
 
-        // --- Execute QueryBuilder count --
-        $countQuery = clone $queryBuilder;
-        $totalObjects = $countQuery->count()->getQuery()->execute();
         // --- Execute QueryBuilder and get paged results ---
         $pagerfanta = $this->createPager($queryBuilder, $request->query->get('page', 1));
+        $totalObjects = $pagerfanta->getNbResults();
 
         // --- Query to get existing languages, years, types... ---
+        $microtime1 = microtime(true);
         $searchLanguages = $this->getMmobjsLanguages($queryBuilder, $languageFound);
+        $microtime2 = microtime(true);
         $searchYears = $this->getMmobjsYears($queryBuilder);
+        $microtime3 = microtime(true);
         $searchTypes = $this->getMmobjsGeantTypes($queryBuilder);
+        $microtime4 = microtime(true);
         $searchDuration = $this->getMmobjsDuration($queryBuilder);
+        $microtime5 = microtime(true);
         $searchTags = $this->getMmobjsTags($queryBuilder);
+        $microtime6 = microtime(true);
+        $searchWithoutTags = $this->getMmobjsWithoutTags($queryBuilder);
+        $searchWithoutTags = $totalObjects - $searchWithoutTags;
+        $microtime7 = microtime(true);
+
+        dump($microtime1);
+        dump($microtime2 - $microtime1);
+        dump($microtime3 - $microtime2);
+        dump($microtime4 - $microtime3);
+        dump($microtime5 - $microtime4);
+        dump($microtime6 - $microtime5);
+        dump($microtime7 - $microtime6);
 
         // -- Init Number Cols for showing results ---
         $numberCols = $this->container->getParameter('columns_objs_search');
@@ -97,6 +112,7 @@ class SearchController extends ParentController
             'types' => $searchTypes,
             'durations' => $searchDuration,
             'tags' => $searchTags,
+            'without_tags' => $searchWithoutTags,
             'search_years' => $searchYears,
             'total_objects' => $totalObjects,
         );
@@ -162,6 +178,7 @@ class SearchController extends ParentController
             $pipeline[] = array('$match' => $criteria);
         }
 
+        $pipeline[] = array('$project' => array('tracks' => 1));
         $pipeline[] = array('$unwind' => '$tracks');
         if ($languageFound) {
             $pipeline[] = array('$match' => array('tracks.language' => $languageFound));
@@ -275,6 +292,35 @@ class SearchController extends ParentController
         }
 
         return $faceted;
+    }
+
+    protected function getMmobjsWithoutTags($queryBuilder = null)
+    {
+        $dm = $this->get('doctrine_mongodb')->getManager();
+        $mmObjColl = $dm->getDocumentCollection('PumukitSchemaBundle:MultimediaObject');
+        $mmObjRepo = $dm->getRepository('PumukitSchemaBundle:MultimediaObject');
+        $criteria = $dm->getFilterCollection()->getFilterCriteria($mmObjRepo->getClassMetadata());
+        $searchByTagCod = $this->container->getParameter('search.parent_tag.cod');
+
+        $pipeline = array();
+        if ($queryBuilder) {
+            $pipeline[] = array('$match' => $queryBuilder->getQueryArray());
+        }
+
+        if ($criteria) {
+            $pipeline[] = array('$match' => $criteria);
+        }
+
+        $pipeline[] = array('$match' => array('tags.cod' => array('$eq' => $searchByTagCod)));
+        $pipeline[] = array('$group' => array('_id' => null, 'count' => array('$sum' => 1)));
+
+        $faceted = array();
+        $facetedResults = $mmObjColl->aggregate($pipeline);
+        foreach ($facetedResults as $result) {
+            $faceted[$result['_id']] = $result['count'];
+        }
+
+        return reset($faceted);
     }
 
     protected function getMmobjsGeantTypes($queryBuilder = null)
