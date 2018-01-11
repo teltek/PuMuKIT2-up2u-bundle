@@ -86,13 +86,14 @@ class SearchController extends ParentController
         $searchWithoutTags = $totalObjects - $searchWithoutTags;
         $microtime7 = microtime(true);
 
-        dump($microtime1);
-        dump($microtime2 - $microtime1);
-        dump($microtime3 - $microtime2);
-        dump($microtime4 - $microtime3);
-        dump($microtime5 - $microtime4);
-        dump($microtime6 - $microtime5);
-        dump($microtime7 - $microtime6);
+        if('dev' == $this->get('kernel')->getEnvironment()) {
+            dump($microtime2 - $microtime1);
+            dump($microtime3 - $microtime2);
+            dump($microtime4 - $microtime3);
+            dump($microtime5 - $microtime4);
+            dump($microtime6 - $microtime5);
+            dump($microtime7 - $microtime6);
+        }
 
         // -- Init Number Cols for showing results ---
         $numberCols = $this->container->getParameter('columns_objs_search');
