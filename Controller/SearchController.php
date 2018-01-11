@@ -37,10 +37,12 @@ class SearchController extends ParentController
         $parentTagOptional = $this->getOptionalParentTag();
 
         $aChildrenTagOptional = array();
-        foreach ($parentTagOptional->getChildren() as $children) {
-            $aChildrenTagOptional[$children->getTitle()] = $children;
+        if ($parentTagOptional) {
+            foreach ($parentTagOptional->getChildren() as $children) {
+                $aChildrenTagOptional[$children->getTitle()] = $children;
+            }
+            ksort($aChildrenTagOptional);
         }
-        ksort($aChildrenTagOptional);
         // --- END Get Tag Parent for Tag Fields ---
 
         // --- Get Variables ---
@@ -60,7 +62,7 @@ class SearchController extends ParentController
         $queryBuilder = $this->durationQueryBuilder($queryBuilder, $durationFound);
         $queryBuilder = $this->dateQueryBuilder($queryBuilder, $startFound, $endFound, $yearFound);
         $queryBuilder = $this->languageQueryBuilder($queryBuilder, $languageFound);
-        $queryBuilder = $this->tagsQueryBuilder($queryBuilder, $tagsFound, $blockedTag, $useTagAsGeneral);
+        $queryBuilder = $this->tagsQueryBuilder($queryBuilder, $tagsFound, $blockedTag, $useTagAsGeneral, $parentTag->getCod());
         $queryBuilder = $queryBuilder->sort('record_date', 'desc');
         // --- END Create QueryBuilder ---
 
@@ -86,7 +88,7 @@ class SearchController extends ParentController
         $searchWithoutTags = $totalObjects - $searchWithoutTags;
         $microtime7 = microtime(true);
 
-        if('dev' == $this->get('kernel')->getEnvironment()) {
+        if ('dev' == $this->get('kernel')->getEnvironment()) {
             dump($microtime2 - $microtime1);
             dump($microtime3 - $microtime2);
             dump($microtime4 - $microtime3);
@@ -153,6 +155,33 @@ class SearchController extends ParentController
             if ($durationFound == '+60') {
                 $queryBuilder->field('duration')->gt(3600);
             }
+        }
+
+        return $queryBuilder;
+    }
+
+    protected function tagsQueryBuilder($queryBuilder, $tagsFound, $blockedTag, $useTagAsGeneral = false, $parentTagCod = null)
+    {
+        if ($parentTagCod && $tagsFound && in_array('unknown', $tagsFound)) {
+            $queryBuilder->field('tags.cod')->notIn(array($parentTagCod));
+            $pos = array_search('unknown', $tagsFound);
+            unset($tagsFound[$pos]);
+        }
+
+        if ($blockedTag !== null and !in_array('unknown', $tagsFound)) {
+            $tagsFound[] = $blockedTag->getCod();
+        }
+        if ($tagsFound !== null) {
+            $tagsFound = array_values(array_diff($tagsFound, array('All', '')));
+        }
+        if (count($tagsFound) > 0) {
+            $queryBuilder->field('tags.cod')->all($tagsFound);
+        }
+
+        if ($useTagAsGeneral && $blockedTag !== null) {
+            $queryBuilder->field('tags.path')->notIn(
+                array(new \MongoRegex('/'.preg_quote($blockedTag->getPath()).'.*\|/'))
+            );
         }
 
         return $queryBuilder;
