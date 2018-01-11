@@ -75,9 +75,8 @@ class SearchController extends ParentController
         $searchYears = $this->getMmobjsYears($queryBuilder);
         $searchTypes = $this->getMmobjsGeantTypes($queryBuilder);
         $searchDuration = $this->getMmobjsDuration($queryBuilder);
-        $searchTags = $this->getMmobjsTags($queryBuilder);
+        $searchTags = $this->getMmobjsTags($queryBuilder, array($parentTag, $parentTagOptional));
         $searchWithoutTags = $this->getMmobjsWithoutTags($queryBuilder);
-
         $searchWithoutTags = $totalObjects - $searchWithoutTags;
 
         // -- Init Number Cols for showing results ---
@@ -164,6 +163,7 @@ class SearchController extends ParentController
             $pipeline[] = array('$match' => $criteria);
         }
 
+        $pipeline[] = array('$project' => array('tracks' => 1));
         $pipeline[] = array('$unwind' => '$tracks');
         if ($languageFound) {
             $pipeline[] = array('$match' => array('tracks.language' => $languageFound));
@@ -245,7 +245,7 @@ class SearchController extends ParentController
         return $faceted;
     }
 
-    protected function getMmobjsTags($queryBuilder = null)
+    protected function getMmobjsTags($queryBuilder = null, $parents = null)
     {
         $dm = $this->get('doctrine_mongodb')->getManager();
         $mmObjColl = $dm->getDocumentCollection('PumukitSchemaBundle:MultimediaObject');
@@ -266,8 +266,19 @@ class SearchController extends ParentController
             $pipeline[] = array('$match' => $criteria);
         }
 
-        $pipeline[] = array('$project' => array('_id' => '$tags.cod', 'path' => '$tags.path'));
+        $pipeline[] = array('$project' => array('_id' => '$tags.cod'));
         $pipeline[] = array('$unwind' => '$_id');
+
+        if ($parents) {
+            $childrenCod = array();
+            foreach ($parents[0]->getChildren() as $tag) {
+                $childrenCod[] = $tag->getCod();
+            }
+            foreach ($parents[1]->getChildren() as $tag) {
+                $childrenCod[] = $tag->getCod();
+            }
+            $pipeline[] = array('$match' => array('_id' => array('$in' => array_values($childrenCod))));
+        }
         $pipeline[] = array('$group' => array('_id' => '$_id', 'count' => array('$sum' => 1)));
 
         $facetedResults = $mmObjColl->aggregate($pipeline);
