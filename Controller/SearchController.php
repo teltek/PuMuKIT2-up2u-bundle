@@ -71,20 +71,20 @@ class SearchController extends ParentController
         $totalObjects = $pagerfanta->getNbResults();
 
         // --- Query to get existing languages, years, types... ---
-        $microtime1 = $microtime(true);
+        $microtime1 = microtime(true);
         $searchLanguages = $this->getMmobjsLanguages($queryBuilder, $languageFound);
-        $microtime2 = $microtime(true);
+        $microtime2 = microtime(true);
         $searchYears = $this->getMmobjsYears($queryBuilder);
-        $microtime3 = $microtime(true);
+        $microtime3 = microtime(true);
         $searchTypes = $this->getMmobjsGeantTypes($queryBuilder);
-        $microtime4 = $microtime(true);
+        $microtime4 = microtime(true);
         $searchDuration = $this->getMmobjsDuration($queryBuilder);
-        $microtime5 = $microtime(true);
+        $microtime5 = microtime(true);
         $searchTags = $this->getMmobjsTags($queryBuilder);
-        $microtime6 = $microtime(true);
+        $microtime6 = microtime(true);
         $searchWithoutTags = $this->getMmobjsWithoutTags($queryBuilder);
         $searchWithoutTags = $totalObjects - $searchWithoutTags;
-        $microtime7 = $microtime(true);
+        $microtime7 = microtime(true);
 
         dump($microtime1);
         dump($microtime2 - $microtime1);
