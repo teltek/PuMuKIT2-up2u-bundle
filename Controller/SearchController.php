@@ -214,7 +214,7 @@ class SearchController extends ParentController
             $pipeline[] = array('$match' => array('tracks.language' => $languageFound));
         }
 
-        $pipeline[] = array('$match' => array('tracks.tags' => 'display'));
+        //$pipeline[] = array('$match' => array('tracks.tags' => 'display'));
         $pipeline[] = array('$group' => array('_id' => array('language' => '$tracks.language', 'mmoid' => '$_id')));
 
         $pipeline[] = array('$group' => array('_id' => '$_id.language', 'count' => array('$sum' => 1)));
