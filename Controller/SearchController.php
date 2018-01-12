@@ -54,6 +54,7 @@ class SearchController extends ParentController
         $endFound = $request->query->get('end');
         $yearFound = $request->query->get('year');
         $languageFound = $request->query->get('language');
+
         // --- END Get Variables --
         // --- Create QueryBuilder ---
         $queryBuilder = $this->createMultimediaObjectQueryBuilder();
@@ -398,7 +399,7 @@ class SearchController extends ParentController
 
         if ('/pumoodle/searchmultimediaobjects' == $request->getPathInfo()) {
             $dm = $this->get('doctrine_mongodb.odm.document_manager');
-            $dm->getFilterCollection()->disable('frontend');
+            $dm->getFilterCollection()->disable('trackslanguagefilter');
             $queryBuilder = $repo->createQueryBuilder();
             $queryBuilder->field('status')->equals(0);
             $queryBuilder->field('properties.redirect')->equals(false);
