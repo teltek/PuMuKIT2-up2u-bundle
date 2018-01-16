@@ -399,7 +399,11 @@ class SearchController extends ParentController
 
         if ('/pumoodle/searchmultimediaobjects' == $request->getPathInfo()) {
             $dm = $this->get('doctrine_mongodb.odm.document_manager');
-            $dm->getFilterCollection()->disable('trackslanguagefilter');
+            try {
+                $dm->getFilterCollection()->disable('trackslanguagefilter');
+            } catch (\Exception $e)  {
+                //Pass if trackslanguagefilter is already disabled
+            }
             $queryBuilder = $repo->createQueryBuilder();
             $queryBuilder->field('status')->equals(0);
             $queryBuilder->field('properties.redirect')->equals(false);
