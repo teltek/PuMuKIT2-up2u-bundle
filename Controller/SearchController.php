@@ -394,16 +394,15 @@ class SearchController extends ParentController
 
     protected function createMultimediaObjectQueryBuilder()
     {
-        $repo = $this->get('doctrine_mongodb')->getRepository('PumukitSchemaBundle:MultimediaObject');
+        $dm = $this->container->get('doctrine_mongodb')->getManager();
+        $repo = $dm->getRepository('PumukitSchemaBundle:MultimediaObject');
         $request = $this->get('request_stack')->getMasterRequest();
 
         if ('/pumoodle/searchmultimediaobjects' == $request->getPathInfo()) {
-            $dm = $this->get('doctrine_mongodb.odm.document_manager');
-            try {
-                $dm->getFilterCollection()->disable('trackslanguagefilter');
-            } catch (\Exception $e)  {
-                //Pass if trackslanguagefilter is already disabled
+            if ($dm->getFilterCollection()->isEnabled('trackslanguagefilter')) {
+                $dm->getFilterCollection()->disabled('trackslanguagefilter');
             }
+
             $queryBuilder = $repo->createQueryBuilder();
             $queryBuilder->field('status')->equals(0);
             $queryBuilder->field('properties.redirect')->equals(false);
