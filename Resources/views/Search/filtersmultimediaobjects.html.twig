@@ -45,7 +45,7 @@
         <label for="year">{% trans %}Year{% endtrans %}</label>
         <select id='year' name='year' class='form-control' onchange="submitForm(this);">
             <option value="" {% if app.request.query.get('year') == "" %} selected="selected" {% endif %}>{% trans%}Any{% endtrans %}</option>
-            {% for year,count in search_years if year > 1990 %}
+            {% for year,count in search_years %}
             <option value="{{year}}" {% if app.request.query.get('year') == year %} selected="selected" {% endif %}>{{year}} ({{ count }})</option>
             {% endfor %}
         </select>
