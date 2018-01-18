@@ -400,7 +400,7 @@ class SearchController extends ParentController
 
         if ('/pumoodle/searchmultimediaobjects' == $request->getPathInfo()) {
             if ($dm->getFilterCollection()->isEnabled('trackslanguagefilter')) {
-                $dm->getFilterCollection()->disabled('trackslanguagefilter');
+                $dm->getFilterCollection()->disable('trackslanguagefilter');
             }
 
             $queryBuilder = $repo->createQueryBuilder();
