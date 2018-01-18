@@ -17,6 +17,10 @@ class FilterListener
 
     public function onKernelController(FilterControllerEvent $event)
     {
+        // Performance tweak (disable frontend forever changing class)
+        $configuration = $this->dm->getConfiguration();
+        $configuration->addFilter('frontend', 'Pumukit\Up2u\WebTVBundle\Filter\TracksLanguageFilter');
+
         /**
          * To improve performance in the Geant/Up2u pumukit don't use criterias from the base WebTV FilterListener.
          */
