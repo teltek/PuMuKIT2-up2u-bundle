@@ -430,7 +430,7 @@ class FeedSyncService
             $track->setOnlyAudio(false);
             $mmobj->setProperty('redirect', false);
             $mmobj->setProperty('iframeable', false);
-            $mmobj->setProperty('geant_type', 'video');
+            $mmobj->setProperty('geant_type', strpos($url, '.flv') ? 'video flv' : 'video');
             $extension = ($formatType == 'video' && in_array($formatExtension, $this->VIDEO_EXTENSIONS)) ? $formatExtension : $urlExtension;
             $mimeType = isset($this->VIDEO_MIMETYPES[$extension]) ? $this->VIDEO_MIMETYPES[$extension] : '';
             $track->setMimeType($mimeType);
