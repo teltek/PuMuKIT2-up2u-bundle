@@ -20,6 +20,18 @@
     </div>
   </div>
 </div>
+
+{# START DEBUG LINK #}
+{% set url = multimediaObject.getTrackWithTag('display').getUrl()|default(false) %}
+{% if url %}
+<div class="row">
+  <div class="col-xs-12">
+    <a style="color:#337ab7" href="{{ url }}" target="_blank">{{ url }}</a>
+  </div>
+</div>
+{% endif %}
+{# END DEBUG LINK #}
+
 <!--SUBTITLE/DESCRIPTION-->
 <div class="row">
   <div class="col-xs-12">
