@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'PuMuKIT (Atto)';
+$string['pluginname'] = 'Select eduOER content';
 $string['settings'] = 'PuMuKIT (Atto)';
 $string['dialogtitle'] = 'Modal dialog title';
 $string['dialogtitledesc'] = 'Modal dialog title';
