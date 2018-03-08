@@ -73,9 +73,9 @@ Y.namespace('M.atto_pumukit').Button = Y.Base.create('button', Y.M.editor_atto.E
         }
 
         this.addButton({
-            icon: 'e/insert_edit_video',
-            //icon: 'icon',
-            //iconComponent: 'atto_pumukit',
+            //icon: 'e/insert_edit_video',
+            icon: 'icon',
+            iconComponent: 'atto_pumukit',
             buttonName: 'pumukit',
             callback: this._displayDialogue,
             callbackArgs: 'iconone'
