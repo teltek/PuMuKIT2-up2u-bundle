@@ -73,7 +73,10 @@
     color: #f7941e;
 }
 
+/*
+See https://github.com/up2university/docker-moodle/issues/65
 .moodle-dialogue-hd {
     background: no-repeat url("https://services.oer.geant.org/shared/images/eduOER_logo_low-res.png") 90% 50% !important;
     background-size: contain !important;
 }
+*/
