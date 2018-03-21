@@ -20,23 +20,21 @@
         {% set lastDate = object.getRecordDate()|date("Y") %}
       {% else %}
         {% if object.getRecordDate()|date("Y") != lastDate %}
-	  <div style="clear: both;"></div>
-	  <br />
-	  
+      <div style="clear: both;"></div>
+      <br />
+
       {% set year = object.getRecordDate()|date("Y")%}
-	  {% if year=="1970" %}
-	    <div title="This repository's date could not be correctly determined.">
-	     <h2 class="search_group_date"><span class="glyphicon glyphicon-warning-sign" style="color:orange"></span> 
-			1970
-	      </h2>
-            </div>
-          {% else %}
-            <h2 class="search_group_date">
-	      {{ year }}
-	    </h2>
-	  {% endif %}
-	  
-	{% endif %}
+      {% if year=="1970" %}
+           <h2 class="search_group_date">
+               Unknown
+           </h2>
+      {% else %}
+          <h2 class="search_group_date">
+              {{ year }}
+          </h2>
+      {% endif %}
+
+    {% endif %}
         {% include 'PumukitWebTVBundle:Misc:multimediaobject.html.twig' with{ 'cols': number_cols } %} {% set lastDate = object.getRecordDate()|date("Y")%}
       {% endif %}
     {% else %}
