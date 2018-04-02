@@ -538,7 +538,11 @@ class FeedSyncService
                 $provider->setProperty('description', $providerData['description']);
                 $providerTitle = sprintf('%s - %s', $provider->getProperty('geant_repository'), $providerData['title']);
                 $provider->setTitle($providerTitle);
-                $thumbnailUrl = $this->parseThumbnailUrl($providerData['thumbnail_url']);
+                if(isset($providerData['thumbnail_url']) && !empty($providerData['thumbnail_url'])){
+                    $thumbnailUrl = $this->parseThumbnailUrl($providerData['thumbnail_url']);
+                } else {
+                    $thumbnailUrl = $defaultThumbnail;
+                }
                 $provider->setProperty('thumbnail_url', $thumbnailUrl);
             } else {
                 $provider->setProperty('description', '');
