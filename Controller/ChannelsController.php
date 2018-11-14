@@ -229,7 +229,7 @@ class ChannelsController extends Controller
             array('$group' => array('_id' => array('$year' => '$record_date'))),
             array('$sort' => array('_id' => 1)),
         );
-        $yearResults = $mmObjColl->aggregate($pipeline);
+        $yearResults = $mmObjColl->aggregate($pipeline, array('cursor' => array()));
         $years = array();
         foreach($yearResults as $year) {
             $years[] = $year['_id'];

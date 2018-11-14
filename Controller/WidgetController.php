@@ -72,7 +72,7 @@ class WidgetController extends BaseWidgetController
             '$sort' => array('_id' => -1),
         );
 
-        $aggregation = $mmObjColl->aggregate($command);
+        $aggregation = $mmObjColl->aggregate($command, array('cursor' => array()));
 
         return array('tracks_languages' => $aggregation);
     }
