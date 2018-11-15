@@ -46,9 +46,7 @@
               <div style="overflow:hidden;height:1.2em;text-overflow:ellipsis; width:100%;white-space: nowrap;" title="{{object.series.title}}">{{object.series.title}}</div>
             {% endif %}
           </div>
-          <div class="date mmobj"
-               title="{{has_date_error?"This object's date could not be correctly added.":'' }}"
-               >
+          <div class="date mmobj">
             {% trans %}Recorded:{% endtrans %}
             {% if object.getRecordDate()|date("Y") == "1970" %}
                 Unknown
