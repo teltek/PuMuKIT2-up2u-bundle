@@ -191,7 +191,7 @@ class SearchController extends ParentController
         $pipeline[] = array('$group' => array('_id' => '$_id.language', 'count' => array('$sum' => 1)));
         $pipeline[] = array('$sort' => array('_id' => 1));
 
-        $languageResults = $mmObjColl->aggregate($pipeline);
+        $languageResults = $mmObjColl->aggregate($pipeline, array('cursor' => array()));
 
         $languages = array();
         foreach ($languageResults as $language) {
@@ -232,7 +232,7 @@ class SearchController extends ParentController
 
         $pipeline[] = array('$group' => array('_id' => '$duration', 'count' => array('$sum' => 1)));
 
-        $facetedResults = $mmObjColl->aggregate($pipeline);
+        $facetedResults = $mmObjColl->aggregate($pipeline, array('cursor' => array()));
         $faceted = array(
             0 => 0,
             -5 => 0,
@@ -286,7 +286,7 @@ class SearchController extends ParentController
         $pipeline[] = array('$unwind' => '$_id');
         $pipeline[] = array('$group' => array('_id' => '$_id', 'count' => array('$sum' => 1)));
 
-        $facetedResults = $mmObjColl->aggregate($pipeline);
+        $facetedResults = $mmObjColl->aggregate($pipeline, array('cursor' => array()));
         $faceted = array();
         foreach ($facetedResults as $result) {
             $faceted[$result['_id']] = $result['count'];
@@ -316,7 +316,7 @@ class SearchController extends ParentController
         $pipeline[] = array('$group' => array('_id' => null, 'count' => array('$sum' => 1)));
 
         $faceted = array();
-        $facetedResults = $mmObjColl->aggregate($pipeline);
+        $facetedResults = $mmObjColl->aggregate($pipeline, array('cursor' => array()));
         foreach ($facetedResults as $result) {
             $faceted[$result['_id']] = $result['count'];
         }
@@ -353,7 +353,7 @@ class SearchController extends ParentController
         $pipeline[] = array('$group' => array('_id' => $idGroup, 'count' => array('$sum' => 1)));
         $pipeline[] = array('$sort' => array('_id' => $sort));
 
-        $facetedResults = $mmObjColl->aggregate($pipeline);
+        $facetedResults = $mmObjColl->aggregate($pipeline, array('cursor' => array()));
         $faceted = array();
         foreach ($facetedResults as $result) {
             $faceted[$result['_id']] = $result['count'];

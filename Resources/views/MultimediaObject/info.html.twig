@@ -7,7 +7,7 @@
 <div class="row">
   <div class="col-xs-12">
     <div class="date">
-      {% if object.getRecordDate()|date("Y") != "1970" %}
+      {% if multimediaObject.getRecordDate()|date("Y") != "1970" %}
         {% trans %}Recording date{% endtrans %}: {{multimediaObject.getRecordDate().format("d/m/Y") }}
       {% endif %}
     </div>
@@ -60,5 +60,11 @@
       {% endfor %}
     </div>
   </div>
+</div>
+<br>
+<div class="row">
+    <div class="col-sm-6">
+        {% include 'PumukitWebTVBundle:MultimediaObject:share.html.twig' %}
+    </div>
 </div>
 <br>
