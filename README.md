@@ -56,3 +56,7 @@ Execute the following script from the root folder of your PuMuKIT2 proyect (usua
 ```bash
 $ ./bin/geant_syncfeed_import https://example.com
 ```
+
+##  Current look of the portal:
+
+![Current look](Resources/doc/current-look.png)
