@@ -3,6 +3,11 @@
 <div class="row">
   {% include 'PumukitWebTVBundle:MultimediaObject:tags.html.twig' %}
 </div>
+
+<div class="pull-right">
+  {% include 'PumukitRatingBundle:Rating:async.html.twig' with {'id': multimediaObject.id} %}
+</div>
+
 <!--VIEWED/DATE-->
 <div class="row">
   <div class="col-xs-12">
@@ -68,3 +73,8 @@
     </div>
 </div>
 <br>
+
+{% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': multimediaObject.id} %}
+{% stylesheets '@PumukitCommentBundle/Resources/public/css/comments.css' %}
+<link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
+{% endstylesheets %}
