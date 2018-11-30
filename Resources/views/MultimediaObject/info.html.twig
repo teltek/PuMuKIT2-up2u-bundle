@@ -1,43 +1,43 @@
 <!--INFO-->
+<!--Multimedia object title-->
+<div class="row" >
+  <div class="col-xs-12">
+    <h4>{{ multimediaObject.getTitle() }}</h4>
+  </div>
+</div>
+
 <!--Multimedia object tags-->
 <div class="row">
-  {% include 'PumukitWebTVBundle:MultimediaObject:tags.html.twig' %}
-</div>
-
-<div class="pull-right">
-  {% include 'PumukitRatingBundle:Rating:async.html.twig' with {'id': multimediaObject.id} %}
-</div>
-
-<!--VIEWED/DATE-->
-<div class="row">
-  <div class="col-xs-12">
-    <div class="date">
-      {% if multimediaObject.getRecordDate()|date("Y") != "1970" %}
-        {% trans %}Recording date{% endtrans %}: {{multimediaObject.getRecordDate().format("d/m/Y") }}
-      {% endif %}
+  <div class="col-sm-6">
+    <div class="row">
+      {% include 'PumukitWebTVBundle:MultimediaObject:tags.html.twig' %}
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="pull-right">
+      {% include 'PumukitRatingBundle:Rating:async.html.twig' with {'id': multimediaObject.id} %}
+    </div>
+    <!--VIEWED/DATE-->
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="date">
+          {% if multimediaObject.getRecordDate()|date("Y") != "1970" %}
+            {% trans %}Recording date{% endtrans %}: {{multimediaObject.getRecordDate().format("d/m/Y") }}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="num_views">
+          {% trans %}Viewed{% endtrans %}: {{multimediaObject.getNumview() }}
+          {% if multimediaObject.getNumview() > 1 %} {% trans %} times {% endtrans %}
+          {% else %} {% trans %} time {% endtrans %} {% endif %}
+        </div>
+      </div>
     </div>
   </div>
 </div>
-<div class="row">
-  <div class="col-xs-12">
-    <div class="num_views">
-      {% trans %}Viewed{% endtrans %}: {{multimediaObject.getNumview() }}
-      {% if multimediaObject.getNumview() > 1 %} {% trans %} times {% endtrans %}
-      {% else %} {% trans %} time {% endtrans %} {% endif %}
-    </div>
-  </div>
-</div>
-
-{# START DEBUG LINK #}
-{% set url = multimediaObject.getTrackWithTag('display').getUrl()|default(false) %}
-{% if url %}
-<div class="row">
-  <div class="col-xs-12">
-    <a style="color:#337ab7" href="{{ url }}" target="_blank">{{ url }}</a>
-  </div>
-</div>
-{% endif %}
-{# END DEBUG LINK #}
 
 <!--SUBTITLE/DESCRIPTION-->
 <div class="row">
@@ -48,6 +48,16 @@
     <p class="description">{{ multimediaObject.getDescription() }}</p>
   </div>
 </div>
+{# START DEBUG LINK #}
+{% set url = multimediaObject.getTrackWithTag('display').getUrl()|default(false) %}
+{% if url %}
+  <div class="row">
+    <div class="col-xs-12">
+      {% trans %}Source:{% endtrans %} <a style="color:#337ab7" href="{{ url }}" target="_blank">{{ url }}</a>
+    </div>
+  </div>
+{% endif %}
+{# END DEBUG LINK #}
 <div class="row">
   <div class="col-xs-12">
     <!-- PERSONS ACT -->
@@ -67,6 +77,7 @@
   </div>
 </div>
 <br>
+
 <div class="row">
     <div class="col-sm-6">
         {% include 'PumukitWebTVBundle:MultimediaObject:share.html.twig' %}
