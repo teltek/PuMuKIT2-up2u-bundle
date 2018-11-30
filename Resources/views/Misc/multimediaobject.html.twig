@@ -14,9 +14,11 @@
   <a href="{{ path('pumukit_webtv_multimediaobject_index', {'id': object.id}) }}" target="{{object.getProperty('redirect')?"_blank":"_self"}}">
     <div class="pumukit_mmobj">
       <div class="thumbnail">
-        {% if object.durationString == "0''" %}
+        {% if object.getProperty('geant_type') == "external link" %}
+          <span class="external_video_icon" alt="" ></span>
+        {% elseif object.durationString == "0''" and object.getProperty('geant_type') == "external video player" %}
           <span class="play_icon" alt="" ></span>
-        {% else %}
+        {% elseif object.durationString != "0''"%}
           <span class="video-duration">{{ object.durationString }}</span>
         {% endif %}
         <img alt="serial_pic" class="serial thumbnailimg" src="{{ object|first_url_pic(true) }}"/>

@@ -240,17 +240,34 @@ abbr[title]  {
     margin: 30px 0;
 }
 
+.external_video_icon,
 .play_icon {
+    position: absolute;
     margin: 5px;
+    left: 0%;
     margin-left: 8px;
-    background-image: url("{{asset('bundles/pumukitup2uwebtv/images/play_icon.png')}}");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
     width: 18px;
     height: 13px;
+    overflow: auto;
 }
+
+.external_video_icon.small,
 .play_icon.small {
     width: 18px;
     height: 13px;
 }
+
+.external_video_icon {
+  background-image: url("{{asset('bundles/pumukitup2uwebtv/images/external_video_icon.svg')}}");
+}
+
+.play_icon {
+  background-image: url("{{asset('bundles/pumukitup2uwebtv/images/play_icon.png')}}");
+}
+
 .index_widget {
     margin-top: 50px;
     margin-bottom: 50px;
