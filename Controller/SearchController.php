@@ -12,8 +12,17 @@ use Pumukit\WebTVBundle\Controller\SearchController as ParentController;
 
 class SearchController extends ParentController
 {
+    private $categories = array(
+        1 => array('title' => 'Health and Medicine', 'map' => array('103')),
+        2 => array('title' => 'Humanities', 'map' => array('100','102','104','105','106','107', '112')),
+        3 => array('title' => 'Science', 'map' => array('108','109')),
+        4 => array('title' => 'Technology', 'map' => array('101')),
+        5 => array('title' => 'Legal and Social', 'map' => array('110', '111'))
+    );
+
     /**
-     * @Route("/searchmultimediaobjects/{tagCod}/{useTagAsGeneral}", defaults={"tagCod": null, "useTagAsGeneral": false}, name="pumukit_webtv_search_multimediaobjects")
+     * @Route("/searchmultimediaobjects/category/{categoryId}", defaults={"tagCod": null, "useTagAsGeneral": false, "categoryId": null}, name="pumukit_webtv_search_multimediaobjects_category")
+     * @Route("/searchmultimediaobjects/{tagCod}/{useTagAsGeneral}", defaults={"tagCod": null, "useTagAsGeneral": false, "categoryId": null}, name="pumukit_webtv_search_multimediaobjects")
      * @ParamConverter("blockedTag", class="PumukitSchemaBundle:Tag", options={"mapping": {"tagCod": "cod"}})
      * @Template("PumukitWebTVBundle:Search:index.html.twig")
      *
@@ -25,10 +34,20 @@ class SearchController extends ParentController
      *
      * @throws \Exception
      */
-    public function multimediaObjectsAction(Request $request, Tag $blockedTag = null, $useTagAsGeneral = false)
+    public function multimediaObjectsAction(Request $request, Tag $blockedTag = null, $useTagAsGeneral = false, $categoryId = null)
     {
+        $queryBuilder = $this->createMultimediaObjectQueryBuilder();
+        $templateTitle = null;
+        $hideSubject = false;
+        if($categoryId && isset($this->categories[$categoryId])){
+            $category = $this->categories[$categoryId];
+            $queryBuilder->field('tags.cod')->in($category['map']);
+            $templateTitle = $category['title'];
+            $hideSubject = true;
+        }
+
         //Add translated title to breadcrumbs.
-        $templateTitle = $this->container->getParameter('menu.search_title') ?: 'Multimedia objects search';
+        $templateTitle = $templateTitle ?: $this->container->getParameter('menu.search_title') ?: 'Multimedia objects search';
         $templateTitle = $this->get('translator')->trans($templateTitle);
         $this->get('pumukit_web_tv.breadcrumbs')->addList($blockedTag ? $blockedTag->getTitle() : $templateTitle, 'pumukit_webtv_search_multimediaobjects');
 
@@ -57,7 +76,6 @@ class SearchController extends ParentController
 
         // --- END Get Variables --
         // --- Create QueryBuilder ---
-        $queryBuilder = $this->createMultimediaObjectQueryBuilder();
         $queryBuilder = $this->searchQueryBuilder($queryBuilder, $searchFound);
         $queryBuilder = $this->geantTypeQueryBuilder($queryBuilder, $typeFound);
         $queryBuilder = $this->durationQueryBuilder($queryBuilder, $durationFound);
@@ -103,6 +121,7 @@ class SearchController extends ParentController
         return array(
             'type' => 'multimediaObject',
             'template_title' => $templateTitle,
+            'hide_subject' => $hideSubject,
             'objects' => $pagerfanta,
             'parent_tag' => $parentTag,
             'parent_tag_optional' => $parentTagOptional,
