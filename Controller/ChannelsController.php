@@ -19,6 +19,6 @@ class ChannelsController extends Controller
     */
     public function multimediaObjectsAction($category, Request $request)
     {
-        return $this->forward('PumukitWebTVBundle:Search:multimediaObjects', array('request' => $request, 'blockedTag' => null, 'useTagAsGeneral' => false, 'categoryId' => null));
+        return $this->redirect($this->generateUrl('pumukit_webtv_search_multimediaobjects_category', array('categoryId' => $category)));
     }
 }
