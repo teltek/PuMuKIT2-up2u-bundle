@@ -53,7 +53,21 @@
 {% if url %}
   <div class="row">
     <div class="col-xs-12">
-      {% trans %}Source:{% endtrans %} <a style="color:#337ab7" href="{{ url }}" target="_blank">{{ url }}</a>
+      <details>
+        <summary>ARIADNE Info</summary>
+        <dl class="ariadne_data">
+          {% dump(multimediaObject.getSeries().getProperties()) %}
+          {% dump(multimediaObject.getProperties()) %}
+          <dt>{% trans %}Source url:{% endtrans %}</dt>
+          <dd><a style="color:#337ab7" href="{{ url }}" target="_blank">{{ url }}</a></dd>
+          <dt>{% trans %}ARIADNE ID:{% endtrans %}</dt>
+          <dd>{{ multimediaObject.getProperty('geant_id') | default('~')}}</dd>
+          <dt>{% trans %}ARIADNE provider:{% endtrans %}</dt>
+          <dd>{{ multimediaObject.getSeries().getProperty('geant_provider') | default('~')}}</dd>
+          <dt>{% trans %}ARIADNE repository:{% endtrans %}</dt>
+          <dd>{{ multimediaObject.getSeries().getProperty('geant_repository') | default('~') }}</dd>
+        </dl>
+      </details>
     </div>
   </div>
 {% endif %}
