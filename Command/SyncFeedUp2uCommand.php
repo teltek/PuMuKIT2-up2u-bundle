@@ -63,6 +63,7 @@ class SyncFeedUp2uCommand extends ContainerAwareCommand
     {
         $formatter = $this->getHelper('formatter');
         $text = $this->getCommandASCIIHeader();
+        $text .= "\nAt ". (new \DateTime())->format("c");
         $formattedBlock = $formatter->formatBlock($text, 'comment', true);
         $output->writeln($formattedBlock);
         //EXECUTE SERVICE
