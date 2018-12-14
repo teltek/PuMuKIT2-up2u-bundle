@@ -93,21 +93,16 @@ class FeedSyncService
         if ($tag) {
             $qb->field('properties.geant_tag')->equals($tag);
         }
+        $qb->field('status')->notEqual(MultimediaObject::STATUS_BLOQ)->field('properties.last_sync_date')->lt($startTime);
 
-        $mmobjs = $qb->field('status')->notEqual(MultimediaObject::STATUS_BLOQ)->field('properties.last_sync_date')->lt($startTime)->getQuery()->execute();
+
         $output->writeln('...Blocking non-updated mmobjs...');
-        $count = 0;
-        foreach ($mmobjs as $mm) {
-            ++$count;
-            $mm->setStatus(MultimediaObject::STATUS_BLOQ);
-            $this->dm->persist($mm);
-            if ($count % 200 == 0) {
-                $this->dm->flush();
-                $this->dm->clear();
-            }
-        }
-        $this->dm->flush();
-        $this->dm->clear();
+
+        $count = $qb->getQuery()->count();
+        $qb->multiple(true)->field('satus')->set(MultimediaObject::STATUS_BLOQ);
+        $qb->getQuery()
+            ->execute();
+
         $output->writeln(sprintf('Number of blocked mmobjs: %s', $count));
         $output->writeln('...Blocking empty tags...');
         $this->providerRootTag = $this->tagRepo->findOneByCod('PROVIDER'); // Necessary after the DocumentManager::clear
