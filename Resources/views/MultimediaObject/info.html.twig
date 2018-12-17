@@ -97,7 +97,5 @@
 </div>
 <br>
 
+<link rel="stylesheet" href="{{ asset('bundles/pumukitcomment/css/comments.css') }}" type="text/css" />
 {% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': multimediaObject.id} %}
-{% stylesheets '@PumukitCommentBundle/Resources/public/css/comments.css' %}
-<link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
-{% endstylesheets %}
