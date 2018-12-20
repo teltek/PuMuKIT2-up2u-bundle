@@ -45,10 +45,12 @@ class FilterListener
         if (($controller[0] instanceof WebTVController /*deprecated*/ || $deprecatedCheck)
             && $event->isMasterRequest()
                 && $isFilterActivated) {
+
+            $configuration = $this->dm->getConfiguration();
+            $configuration->addFilter('trackslanguagefilter', 'Pumukit\Up2u\WebTVBundle\Filter\TracksLanguageFilter');
+            $filtertrack = $this->dm->getFilterCollection()->enable('trackslanguagefilter');
+
             if ($req->getSession()->has('filter_language')) {
-                $configuration = $this->dm->getConfiguration();
-                $configuration->addFilter('trackslanguagefilter', 'Pumukit\Up2u\WebTVBundle\Filter\TracksLanguageFilter');
-                $filtertrack = $this->dm->getFilterCollection()->enable('trackslanguagefilter');
                 $filtertrack->setParameter('tracks_language', $req->getSession()->get('filter_language'));
             }
         }

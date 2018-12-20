@@ -17,9 +17,9 @@ class TracksLanguageFilter extends BsonFilter
     private function getMultimediaObjectCriteria()
     {
         if (isset($this->parameters['tracks_language'])) {
-            return array('tracks.language' => array('$in' => $this->parameters['tracks_language']));
+            return array('status' => 0, 'tracks.language' => array('$in' => $this->parameters['tracks_language']));
         }
 
-        return array();
+        return array('status' => 0);
     }
 }
