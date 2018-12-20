@@ -99,7 +99,7 @@ class FeedSyncService
         $output->writeln('...Blocking non-updated mmobjs...');
 
         $count = $qb->getQuery()->count();
-        $qb->multiple(true)->field('satus')->set(MultimediaObject::STATUS_BLOQ);
+        $qb->update()->multiple(true)->field('satus')->set(MultimediaObject::STATUS_BLOQ);
         $qb->getQuery()
             ->execute();
 
