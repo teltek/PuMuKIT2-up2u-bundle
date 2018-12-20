@@ -12,6 +12,7 @@ else
     then
       php app/console geant:syncfeed:import --env=prod https://oer.up2university.eu/search/v1/akif/ K12
       php app/console geant:syncfeed:import --env=prod https://services.oer.geant.org/search/v1/akif/ HE
+      php app/console geant:syncfeed:blockold --env=prod
       rm -rf app/cache/all/pmk2geantgit
       git clone https://github.com/teltek/PuMuKIT2-up2u-eduoer-bundle.git app/cache/all/pmk2geantgit
       cp app/cache/all/pmk2geantgit/Resources/data/repos_data/* web/bundles/pumukitup2uwebtv/images/repositories/
@@ -21,6 +22,7 @@ else
   else
       php ../../../../../../app/console geant:syncfeed:import --env=prod https://oer.up2university.eu/search/v1/akif/ K12
       php ../../../../../../app/console geant:syncfeed:import --env=prod https://services.oer.geant.org/search/v1/akif/ HE
+      php ../../../../../../app/console geant:syncfeed:blockold --env=prod
       rm -rf ../../../../../../app/cache/all/pmk2geantgit
       git clone https://github.com/teltek/PuMuKIT2-up2u-eduoer-bundle.git ../../../../../../app/cache/all/pmk2geantgit
       cp ../../../../../../app/cache/all/pmk2geantgit/Resources/data/repos_data/* ../../../../../../web/bundles/pumukitup2uwebtv/images/repositories/
