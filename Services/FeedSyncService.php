@@ -264,7 +264,8 @@ class FeedSyncService
             $mmobj = $factory->doCreateMultimediaObject($series, false);
             $mmobj->setProperty('geant_id', $parsedTerena['identifier']);
             $mmobj->setProperty('geant_tag', $tag);
-            $mmobj->setProperty('feed_updated_date', $parsedTerena['lastUpdateDate']);
+            $mmobj->setProperty('feed_updated_date', $parsedTerena['lastUpdateDate']); //to delte use v2
+            $mmobj->setPropertyAsDateTime('feed_updated_date_v2', $parsedTerena['lastUpdateDate']);
             //Add 'provider' tag
 
             $tagCod = $parsedTerena['provider'];
@@ -288,9 +289,12 @@ class FeedSyncService
             $this->tagService->addTagToMultimediaObject($mmobj, $providerTag->getId(), false);
         }
 
-        $mmobj->setProperty('feed_updated_date', $parsedTerena['lastUpdateDate']);
-        $mmobj->setProperty('last_sync_date', $lastSyncDate);
-        $series->setProperty('last_sync_date', $lastSyncDate);
+        $mmobj->setProperty('feed_updated_date', $parsedTerena['lastUpdateDate']); //to delte use v2
+        $mmobj->setPropertyAsDateTime('feed_updated_date_v2', $parsedTerena['lastUpdateDate']);
+        $mmobj->setProperty('last_sync_date', $lastSyncDate); //to delte use v2
+        $mmobj->setPropertyAsDateTime('last_sync_date_v2', $lastSyncDate->toDateTime());
+        $series->setProperty('last_sync_date', $lastSyncDate); //to delte use v2
+        $series->setPropertyAsDateTime('last_sync_date_v2', $lastSyncDate->toDateTime());
         //PUBLISH
         $mmobj->setStatus(MultimediaObject::STATUS_PUBLISHED);
         $this->tagService->addTagToMultimediaObject($mmobj, $this->webTVTag->getId(), false);
