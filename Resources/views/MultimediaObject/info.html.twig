@@ -97,5 +97,12 @@
 </div>
 <br>
 
+{% if not app.user %}
+    <a href="{{ url('pumukit_auth') }}" type="button" class="login-button btn btn-xs btn-default" title="{% trans %}Log in{% endtrans %}">
+        <span class="glyphicon glyphicon-log-in"></span>
+            {% trans %}Log in{% endtrans %}
+    </a>
+    {% trans %} to add comments {% endtrans %}
+{% endif %}
 <link rel="stylesheet" href="{{ asset('bundles/pumukitcomment/css/comments.css') }}" type="text/css" />
 {% include 'FOSCommentBundle:Thread:async.html.twig' with {'id': multimediaObject.id} %}
