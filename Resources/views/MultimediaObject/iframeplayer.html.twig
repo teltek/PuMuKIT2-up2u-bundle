@@ -29,7 +29,7 @@
   <div class="col-lg-4 col-md-5">
     <span class="hidden-sm hidden-xs"></br></span>
     {% include 'PumukitWebTVBundle:MultimediaObject:share.html.twig' %}
-    {% render(controller('PumukitWebTVBundle:MultimediaObject:series', {'multimediaObject': multimediaObject})) %}
-    {% render(controller('PumukitWebTVBundle:MultimediaObject:related', {'multimediaObject': multimediaObject})) %}
+    {{ render(controller('PumukitWebTVBundle:MultimediaObject:series', {'multimediaObject': multimediaObject})) }}
+    {{ render(controller('PumukitWebTVBundle:MultimediaObject:related', {'multimediaObject': multimediaObject})) }}
   </div>
 {% endblock %}

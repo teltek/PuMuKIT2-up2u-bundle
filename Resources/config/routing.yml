@@ -9,7 +9,7 @@ pumukit_web_tv:
     prefix:   /
 
 pumukit_webtv_default_css:
-    pattern: /webtv/css/webtv.css
+    path: /webtv/css/webtv.css
     methods: [GET]
     defaults:
         _controller: PumukitWebTVBundle:Template:template
@@ -17,7 +17,7 @@ pumukit_webtv_default_css:
         _format: css
 
 pumukit_webtv_staticpages_info:
-    pattern: info
+    path: info
     methods: [GET]
     defaults:
         _controller: PumukitWebTVBundle:Template:template
@@ -25,7 +25,7 @@ pumukit_webtv_staticpages_info:
         title: 'Info'        
 
 pumukit_webtv_staticpages_faq:
-    pattern: faq
+    path: faq
     methods: [GET]
     defaults:
         _controller: PumukitWebTVBundle:Template:template
@@ -33,7 +33,7 @@ pumukit_webtv_staticpages_faq:
         title: 'FAQ'
 
 pumukit_webtv_staticpages_contact:
-    pattern: contact
+    path: contact
     methods: [GET]
     defaults:
         _controller: PumukitWebTVBundle:Template:template
@@ -41,7 +41,7 @@ pumukit_webtv_staticpages_contact:
         title: 'Contact'
         
 pumukit_webtv_staticpages_about:
-    pattern: about
+    path: about
     methods: [GET]
     defaults:
         _controller: PumukitWebTVBundle:Template:template

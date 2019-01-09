@@ -33,11 +33,11 @@
 </div>
 {% if menu_stats %}
 <div class="row widget slidebar stats">
-  {% render(controller('PumukitWebTVBundle:Widget:stats')) %}
+  {{ render(controller('PumukitWebTVBundle:Widget:stats')) }}
 </div>
 {% endif %}
 
 <div class="row widget visible-lg" style="margin-top:10px;">
   <h4>View only</h4>
-  {% render(controller('PumukitUp2uWebTVBundle:Widget:tracksLanguages')) %}
+  {{ render(controller('PumukitUp2uWebTVBundle:Widget:tracksLanguages')) }}
 </div>
