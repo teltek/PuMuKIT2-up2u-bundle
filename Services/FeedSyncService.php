@@ -103,6 +103,22 @@ class FeedSyncService
             ->execute();
 
         $output->writeln(sprintf('Number of blocked mmobjs: %s', $count));
+
+        $qb = $this->mmobjRepo->createQueryBuilder();
+        if ($tag) {
+            $qb->field('properties.geant_tag')->equals($tag);
+        }
+        $qb->field('status')->notEqual(MultimediaObject::STATUS_BLOQ)->field('properties.geant_type')->in(array("external link", "video flv"));
+
+        $output->writeln('...Blocking flv and external link mmobjs...');
+
+        $count = $qb->getQuery()->count();
+        $qb->update()->multiple(true)->field('satus')->set(MultimediaObject::STATUS_BLOQ);
+        $qb->getQuery()
+            ->execute();
+
+        $output->writeln(sprintf('Number of blocked mmobjs: %s', $count));
+
         $output->writeln('...Blocking empty tags...');
         $this->providerRootTag = $this->tagRepo->findOneByCod('PROVIDER'); // Necessary after the DocumentManager::clear
         $providerTags = $this->providerRootTag->getChildren();
