@@ -93,8 +93,7 @@ class FeedSyncService
         if ($tag) {
             $qb->field('properties.geant_tag')->equals($tag);
         }
-        $qb->field('status')->notEqual(MultimediaObject::STATUS_BLOQ)->field('properties.last_sync_date')->lt($startTime);
-
+        $qb->field('status')->notEqual(MultimediaObject::STATUS_BLOQ)->field('properties.last_sync_date_v2')->lt($startTime->toDateTime()->format('c'));
 
         $output->writeln('...Blocking non-updated mmobjs...');
 
