@@ -21,7 +21,7 @@
         "php": ">=5.5.9",
         "symfony/framework-bundle": "~2.0",
         "twig/twig": "~1.5",
-        "pumukit/pumukit2": "2.3.*",
+        "pumukit/pumukit2": "2.4.* || 2.3.*",
         "teltek/pmk2-rating-bundle": "*@dev",
         "teltek/pmk2-comment-bundle": "*@dev"
     },
