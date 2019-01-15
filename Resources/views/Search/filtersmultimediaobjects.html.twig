@@ -26,7 +26,6 @@
     </div>
     {% endif %}
 
-    {% if app.request.getPathInfo() == '/pumoodle/searchmultimediaobjects' %}
     <div class="form-group col-md-2 col-sm-3 col-xs-6">
         <label for="language">{% trans %}Language{% endtrans %}</label>
         <select id="language" name="language" class="form-control" onchange="submitForm(this);">
@@ -36,7 +35,6 @@
             {% endfor %}
         </select>
     </div>
-    {% endif %}
 
     <div class="form-group col-md-2 col-sm-3 col-xs-6">
         <label for="year">{% trans %}Year{% endtrans %}</label>
