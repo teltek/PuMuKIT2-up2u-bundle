@@ -444,7 +444,14 @@ class FeedSyncService
             $track->setOnlyAudio(false);
             $mmobj->setProperty('redirect', false);
             $mmobj->setProperty('iframeable', false);
-            $mmobj->setProperty('geant_type', strpos($url, '.flv') ? 'video flv' : 'video');
+
+            if (strpos($url, '.flv')) {
+                $mmobj->setProperty('geant_type', 'video flv');
+                $mmobj->setStatus(MultimediaObject::STATUS_BLOQ);
+            } else {
+                $mmobj->setProperty('geant_type', 'video');
+            }
+
             $extension = ($formatType == 'video' && in_array($formatExtension, $this->VIDEO_EXTENSIONS)) ? $formatExtension : $urlExtension;
             $mimeType = isset($this->VIDEO_MIMETYPES[$extension]) ? $this->VIDEO_MIMETYPES[$extension] : '';
             $track->setMimeType($mimeType);
@@ -474,6 +481,7 @@ class FeedSyncService
                 $mmobj->setProperty('iframeable', false);
                 $mmobj->setProperty('redirect_url', $url);
                 $mmobj->setProperty('geant_type', 'external link');
+                $mmobj->setStatus(MultimediaObject::STATUS_BLOQ);
             }
         }
         $this->dm->persist($track);
