@@ -98,7 +98,7 @@ class FeedSyncService
         $output->writeln('...Blocking non-updated mmobjs...');
 
         $count = $qb->getQuery()->count();
-        $qb->update()->multiple(true)->field('satus')->set(MultimediaObject::STATUS_BLOQ);
+        $qb->update()->multiple(true)->field('status')->set(MultimediaObject::STATUS_BLOQ);
         $qb->getQuery()
             ->execute();
 
@@ -113,7 +113,7 @@ class FeedSyncService
         $output->writeln('...Blocking flv and external link mmobjs...');
 
         $count = $qb->getQuery()->count();
-        $qb->update()->multiple(true)->field('satus')->set(MultimediaObject::STATUS_BLOQ);
+        $qb->update()->multiple(true)->field('status')->set(MultimediaObject::STATUS_BLOQ);
         $qb->getQuery()
             ->execute();
 
