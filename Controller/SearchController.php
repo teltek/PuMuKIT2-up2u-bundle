@@ -14,11 +14,95 @@ class SearchController extends ParentController
 {
     private $categories = array(
         1 => array('title' => 'Health and Medicine', 'map' => array('103')),
-        2 => array('title' => 'Humanities', 'map' => array('100','102','104','105','106','107', '112')),
-        3 => array('title' => 'Science', 'map' => array('108','109')),
+        2 => array('title' => 'Humanities', 'map' => array('100', '102', '104', '105', '106', '107', '112')),
+        3 => array('title' => 'Science', 'map' => array('108', '109')),
         4 => array('title' => 'Technology', 'map' => array('101')),
-        5 => array('title' => 'Legal and Social', 'map' => array('110', '111'))
+        5 => array('title' => 'Legal and Social', 'map' => array('110', '111')),
     );
+
+    /**
+     * @Template("PumukitWebTVBundle:Search:filtersmultimediaobjects.html.twig")
+     */
+    public function filterAction(Request $request)
+    {
+        // --- Get Tag Parent for Tag Fields ---
+        $parentTag = $this->getParentTag();
+        $parentTagOptional = $this->getOptionalParentTag();
+
+        $childrenTagOptional = array();
+        if ($parentTagOptional) {
+            foreach ($parentTagOptional->getChildren() as $children) {
+                $childrenTagOptional[$children->getTitle()] = $children;
+            }
+            ksort($childrenTagOptional);
+        }
+        // --- END Get Tag Parent for Tag Fields ---
+
+        $blockedTag = null;
+        $searchDuration = null;
+        $hideSubject = null;
+        $searchLanguages = null;
+        $numberCols = null;
+        $pagerfanta = null;
+        $searchYears = null;
+        $searchTags = null;
+        $tagsFound = null;
+        $templateTitle = null;
+        $totalObjects = null;
+
+        $queryBuilder = $this->createMultimediaObjectQueryBuilder();
+        $facetedResults = $this->doFaceted($queryBuilder);
+
+        return array(
+            'children_tag_optional' => $childrenTagOptional,
+            'faceted_results' => $facetedResults,
+            'hide_subject' => $hideSubject,
+            'number_cols' => $numberCols,
+            'objects' => $pagerfanta,
+            'parent_tag' => $parentTag,
+            'parent_tag_optional' => $parentTagOptional,
+            'search_years' => $searchYears,
+            'tags_found' => $tagsFound,
+            'template_title' => $templateTitle,
+            'total_objects' => $totalObjects,
+            'type' => 'multimediaObject',
+            'blocked_tag' => $blockedTag,
+        );
+    }
+
+    private function doFaceted($queryBuilder)
+    {
+        // --- Query to get existing languages, years, types... ---
+        $microtime1 = microtime(true);
+        $languages = $this->getMmobjsLanguages($queryBuilder, null);
+        $microtime2 = microtime(true);
+        $years = $this->getMmobjsYears($queryBuilder);
+        $microtime3 = microtime(true);
+        $types = $this->getMmobjsGeantTypes($queryBuilder);
+        $microtime4 = microtime(true);
+        $duration = $this->getMmobjsDuration($queryBuilder);
+        $microtime5 = microtime(true);
+        $tags = $this->getMmobjsTags($queryBuilder);
+        $microtime6 = microtime(true);
+        $microtime7 = microtime(true);
+
+        if ('dev' == $this->get('kernel')->getEnvironment()) {
+            dump($microtime2 - $microtime1);
+            dump($microtime3 - $microtime2);
+            dump($microtime4 - $microtime3);
+            dump($microtime5 - $microtime4);
+            dump($microtime6 - $microtime5);
+            dump($microtime7 - $microtime6);
+        }
+
+        return array(
+            'languages' => $languages,
+            'years' => $years,
+            'types' => $types,
+            'durations' => $duration,
+            'tags' => $tags,
+        );
+    }
 
     /**
      * @Route("/searchmultimediaobjects/category/{categoryId}", defaults={"tagCod": null, "useTagAsGeneral": false, "categoryId": null}, name="pumukit_webtv_search_multimediaobjects_category")
@@ -39,7 +123,7 @@ class SearchController extends ParentController
         $queryBuilder = $this->createMultimediaObjectQueryBuilder();
         $templateTitle = null;
         $hideSubject = false;
-        if($categoryId && isset($this->categories[$categoryId])){
+        if ($categoryId && isset($this->categories[$categoryId])) {
             $category = $this->categories[$categoryId];
             $queryBuilder->field('tags.cod')->in($category['map']);
             $templateTitle = $category['title'];
@@ -91,28 +175,7 @@ class SearchController extends ParentController
         $pagerfanta = $this->createPager($queryBuilder, $request->query->get('page', 1));
         $totalObjects = $pagerfanta->getNbResults();
 
-        // --- Query to get existing languages, years, types... ---
-        $microtime1 = microtime(true);
-        $searchLanguages = $this->getMmobjsLanguages($queryBuilder, $languageFound);
-        $microtime2 = microtime(true);
-        $searchYears = $this->getMmobjsYears($queryBuilder);
-        $microtime3 = microtime(true);
-        $searchTypes = $this->getMmobjsGeantTypes($queryBuilder);
-        $microtime4 = microtime(true);
-        $searchDuration = $this->getMmobjsDuration($queryBuilder);
-        $microtime5 = microtime(true);
-        $searchTags = $this->getMmobjsTags($queryBuilder);
-        $microtime6 = microtime(true);
-        $microtime7 = microtime(true);
-
-        if ('dev' == $this->get('kernel')->getEnvironment()) {
-            dump($microtime2 - $microtime1);
-            dump($microtime3 - $microtime2);
-            dump($microtime4 - $microtime3);
-            dump($microtime5 - $microtime4);
-            dump($microtime6 - $microtime5);
-            dump($microtime7 - $microtime6);
-        }
+        $facetedResults = $this->doFaceted($queryBuilder);
 
         // -- Init Number Cols for showing results ---
         $numberCols = $this->container->getParameter('columns_objs_search');
@@ -128,13 +191,9 @@ class SearchController extends ParentController
             'children_tag_optional' => $aChildrenTagOptional,
             'tags_found' => $tagsFound,
             'number_cols' => $numberCols,
-            'languages' => $searchLanguages,
             'blocked_tag' => $blockedTag,
-            'types' => $searchTypes,
-            'durations' => $searchDuration,
-            'tags' => $searchTags,
-            'search_years' => $searchYears,
             'total_objects' => $totalObjects,
+            'faceted_results' => $facetedResults,
         );
     }
 
