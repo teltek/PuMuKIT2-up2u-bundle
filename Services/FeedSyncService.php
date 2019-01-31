@@ -5,7 +5,6 @@ namespace Pumukit\Up2u\WebTVBundle\Services;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Pumukit\SchemaBundle\Document\MultimediaObject;
 use Pumukit\SchemaBundle\Document\Person;
-use Pumukit\SchemaBundle\Document\Series;
 use Pumukit\SchemaBundle\Document\Tag;
 use Pumukit\SchemaBundle\Document\Track;
 use Pumukit\SchemaBundle\Services\FactoryService;
@@ -108,7 +107,7 @@ class FeedSyncService
         if ($tag) {
             $qb->field('properties.geant_tag')->equals($tag);
         }
-        $qb->field('status')->notEqual(MultimediaObject::STATUS_BLOQ)->field('properties.geant_type')->in(array("external link", "video flv"));
+        $qb->field('status')->notEqual(MultimediaObject::STATUS_BLOQ)->field('properties.geant_type')->in(array('external link', 'video flv'));
 
         $output->writeln('...Blocking flv and external link mmobjs...');
 
@@ -560,7 +559,7 @@ class FeedSyncService
                 $provider->setProperty('description', $providerData['description']);
                 $providerTitle = sprintf('%s - %s', $provider->getProperty('geant_repository'), $providerData['title']);
                 $provider->setTitle($providerTitle);
-                if(isset($providerData['thumbnail_url']) && !empty($providerData['thumbnail_url'])){
+                if (isset($providerData['thumbnail_url']) && !empty($providerData['thumbnail_url'])) {
                     $thumbnailUrl = $this->parseThumbnailUrl($providerData['thumbnail_url']);
                 } else {
                     $thumbnailUrl = $defaultThumbnail;

@@ -210,9 +210,6 @@ class FeedProcesserService
         return $tags;
     }
 
-    /**
-     *
-     */
     private function retrievePeople($geantFeedObject)
     {
         $people = array();
@@ -256,7 +253,7 @@ class FeedProcesserService
                           'U22' => array('109108'),
                           'U23' => array('109104'),
                           'U24' => array('109103'),
-                          'U25' => array('109102','109107'),
+                          'U25' => array('109102', '109107'),
                           'U31' => array('109100'),
                           'U32' => array('103'),
                           'U33' => array('101'),
@@ -269,7 +266,7 @@ class FeedProcesserService
                           'U58' => array('112'),
                           'U59' => array('110101'),
                           'U61' => array('110103'),
-                          'U62' => array('102','107'),
+                          'U62' => array('102', '107'),
                           'U63' => array('110105'),
                           'U71' => array('114102'),
                           'U72' => array('114'),

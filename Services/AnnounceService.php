@@ -19,6 +19,7 @@ class AnnounceService
     {
         //Get last objects without errors.
         $lastMms = $this->mmobjRepo->findStandardBy(array(), array('public_date' => -1), $limit, 0);
+
         return $lastMms;
     }
 

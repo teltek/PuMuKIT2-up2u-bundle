@@ -3,7 +3,6 @@
 namespace Pumukit\Up2u\WebTVBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Pumukit\SchemaBundle\Document\MultimediaObject;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Pumukit\WebTVBundle\Controller\WidgetController as BaseWidgetController;
