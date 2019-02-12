@@ -1,124 +1,131 @@
-<form id="form_search" name="busqueda" method="get" class="row">
-
+<form id="form_search" name="busqueda" method="get">
     <input type="submit" style="display:none"/>
 
-    {% if parent_tag_optional is not null and ( blocked_tag is null or not blocked_tag.isDescendantOf(parent_tag_optional)) %}
-        <div class="form-group col-md-2 col-sm-3 col-xs-6">
-            <label for="tags">{{ parent_tag_optional.title|trans}}</label>
-            <select id="tags" name="tags[]" class="form-control" onchange="submitForm(this);">
-                <option value="" {% if tags_found == "" %} selected="selected" {% endif %}>Any</option>
-                {% for key, tag in children_tag_optional if (tag.title != "" and not tag.getProperty('empty',false) and faceted_results['tags'][tag.cod] is defined) %}
-                <option value="{{tag.cod}}" {% if tag.cod in tags_found %} selected="selected" {% endif %}>{{ tag.title }} ({{ faceted_results['tags'][tag.cod]|default(0) }})</option>
+    <!--//SEARCH BOX-->
+    <div class="search-box" align="center">
+        <div class="input-group stylish-input-group">
+            <label for="search" class="sr-only">{% trans %}Search OERs...{% endtrans %}</label>
+            <input type="text" class="form-control" placeholder="{% trans %} Search OERs {% endtrans %}..." name="search" id="search" value="{{ app.request.query.get('search') }}">
+            <span class="input-group-addon">
+                <label for="submit-button" class="sr-only">Submit</label>
+                <button type="submit" id="submit-button" style="border:0;background:transparent;">
+                    <span class="glyphicon glyphicon-search"></span>
+                </button>
+            </span>
+        </div>
+    </div>
+    <div class="advanced_search_title" >Advanced filters</div>
+    <div class="advanced_search_box" id="advanced_search_box">
+        {% if parent_tag_optional is not null and ( blocked_tag is null or not blocked_tag.isDescendantOf(parent_tag_optional)) %}
+            <div class="form-group col-md-2 col-sm-3 col-xs-6 hidden-lg">
+                <label for="tags">{{ parent_tag_optional.title|trans}}</label>
+                <select id="tags" name="tags[]" class="form-control" onchange="submitForm(this);">
+                    <option value="" {% if tags_found == "" %} selected="selected" {% endif %}>Any</option>
+                    {% for key, tag in children_tag_optional if (tag.title != "" and not tag.getProperty('empty',false) and faceted_results['tags'][tag.cod] is defined) %}
+                        <option value="{{tag.cod}}" {% if tag.cod in tags_found %} selected="selected" {% endif %}>{{ tag.title }} ({{ faceted_results['tags'][tag.cod]|default(0) }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+        {% endif %}
+        {% if not hide_subject|default(false) and (parent_tag is not null and (blocked_tag is null or not blocked_tag.isDescendantOf(parent_tag) ) )%}
+            <div class="form-group col-lg-3 col-md-2 col-sm-3 col-xs-6">
+                <label for="tags">{% trans %} Subject{% endtrans %}</label>
+                <select id="tags" name="tags[]" class="form-control" onchange="submitForm(this);">
+                    <option value="" {% if tags_found == "" %} selected="selected" {% endif %}>Any</option>
+                    {% for tag in parent_tag.children if tag.title != "" and tags[tag.cod] is defined and tags[tag.cod] > 0 %}
+                        <option value="{{tag.cod}}" {% if tag.cod in tags_found %} selected="selected" {% endif %}>{{ tag.title }} ({{ tags[tag.cod]|default(0) }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+        {% endif %}
+
+        <div class="form-group col-lg-2 col-md-2 col-sm-3 col-xs-6">
+            <label for="language">{% trans %}Language{% endtrans %}</label>
+            <select id="language" name="language" class="form-control" onchange="submitForm(this);">
+                <option value="" {% if app.request.query.get('language') == "" %} selected="selected" {% endif %}>Any</option>
+                {% for language, count in faceted_results['languages'] if language != "" and count != 0 %}
+                    <option value="{{ language }}" {% if app.request.query.get('language') == language %} selected="selected" {% endif %}>{{ language|language_name }} ({{ count }})</option>
                 {% endfor %}
             </select>
         </div>
-    {% endif %}
 
-    {% if not hide_subject|default(false) and (parent_tag is not null and (blocked_tag is null or not blocked_tag.isDescendantOf(parent_tag) ) )%}
-    <div class="form-group col-md-2 col-sm-3 col-xs-6">
-        <label for="tags">{% trans %} Subject{% endtrans %}</label>
-        <select id="tags" name="tags[]" class="form-control" onchange="submitForm(this);">
-            <option value="" {% if tags_found == "" %} selected="selected" {% endif %}>Any</option>
-            {% for tag in parent_tag.children if tag.title != "" and tags[tag.cod] is defined and tags[tag.cod] > 0 %}
-                <option value="{{tag.cod}}" {% if tag.cod in tags_found %} selected="selected" {% endif %}>{{ tag.title }} ({{ tags[tag.cod]|default(0) }})</option>
-            {% endfor %}
-        </select>
-    </div>
-    {% endif %}
+        <div class="form-group col-lg-2 col-md-2 col-sm-3 col-xs-6">
+            <label for="year">{% trans %}Year{% endtrans %}</label>
+            <select id='year' name='year' class='form-control' onchange="submitForm(this);">
+                <option value="" {% if app.request.query.get('year') == "" %} selected="selected" {% endif %}>{% trans%}Any{% endtrans %}</option>
+                {% for year,count in faceted_results['years'] %}
+                    <option value="{{year}}" {% if app.request.query.get('year') == year %} selected="selected" {% endif %}>{{year}} ({{ count }})</option>
+                {% endfor %}
+            </select>
+        </div>
 
-    <div class="form-group col-md-2 col-sm-3 col-xs-6">
-        <label for="language">{% trans %}Language{% endtrans %}</label>
-        <select id="language" name="language" class="form-control" onchange="submitForm(this);">
-            <option value="" {% if app.request.query.get('language') == "" %} selected="selected" {% endif %}>Any</option>
-            {% for language, count in faceted_results['languages'] if language != "" and count != 0 %}
-            <option value="{{ language }}" {% if app.request.query.get('language') == language %} selected="selected" {% endif %}>{{ language|language_name }} ({{ count }})</option>
-            {% endfor %}
-        </select>
-    </div>
+        <div class="form-group col-lg-3 col-md-2 col-sm-3 col-xs-6">
+            <label for="duration">{% trans %}Duration{% endtrans %}</label>
+            <select id="duration" name="duration" class="form-control" onchange="submitForm(this);">
+                <option value="" {% if app.request.query.get('duration') == "" %} selected="selected" {% endif %}>{% trans%}Any{% endtrans %}</option>
+                {% if faceted_results['durations'][0] is defined and faceted_results['durations'][0] != 0 %}
+                    <option value="0" {% if app.request.query.get('duration') == "0" %} selected="selected" {% endif %}>{% trans %}Unknown{% endtrans %} ({{ faceted_results['durations'][0]|default(0) }})</option>
+                {% endif %}
+                {% if faceted_results['durations'][-5] is defined and faceted_results['durations'][-5] != 0 %}
+                    <option value="-5" {% if app.request.query.get('duration') == "-5" %} selected="selected" {% endif %}>{% trans %}From 0 to 5 minutes{% endtrans %} ({{ faceted_results['durations'][-5]|default(0) }})</option>
+                {% endif %}
+                {% if faceted_results['durations'][-10] is defined and faceted_results['durations'][-10] != 0 %}
+                    <option value="-10" {% if app.request.query.get('duration') == "-10" %} selected="selected" {% endif %}>{% trans %}From 5 to 10 minutes{% endtrans %} ({{ faceted_results['durations'][-10]|default(0) }})</option>
+                {% endif %}
+                {% if faceted_results['durations'][-30] is defined and faceted_results['durations'][-30] != 0 %}
+                    <option value="-30" {% if app.request.query.get('duration') == "-30" %} selected="selected" {% endif %}>{% trans %}From 10 to 30 minutes{% endtrans %} ({{ faceted_results['durations'][-30]|default(0) }})</option>
+                {% endif %}
+                {% if faceted_results['durations'][-60] is defined and faceted_results['durations'][-60] != 0 %}
+                    <option value="-60" {% if app.request.query.get('duration') == "-60" %} selected="selected" {% endif %}>{% trans %}From 30 to 60 minutes{% endtrans %} ({{ faceted_results['durations'][-60]|default(0) }})</option>
+                {% endif %}
+                {% if faceted_results['durations'][60] is defined and faceted_results['durations'][60] != 0 %}
+                    <option value="+60" {% if app.request.query.get('duration') == "+60" %} selected="selected" {% endif %}>{% trans %}More than 60 minutes{% endtrans %} ({{ faceted_results['durations'][60]|default(0) }})</option>
+                {% endif %}
+            </select>
+        </div>
 
-    <div class="form-group col-md-2 col-sm-3 col-xs-6">
-        <label for="year">{% trans %}Year{% endtrans %}</label>
-        <select id='year' name='year' class='form-control' onchange="submitForm(this);">
-            <option value="" {% if app.request.query.get('year') == "" %} selected="selected" {% endif %}>{% trans%}Any{% endtrans %}</option>
-            {% for year,count in faceted_results['years'] %}
-            <option value="{{year}}" {% if app.request.query.get('year') == year %} selected="selected" {% endif %}>{{year}} ({{ count }})</option>
-            {% endfor %}
-        </select>
-    </div>
-
-    <div class="form-group col-md-2 col-sm-3 col-xs-6">
-        <label for="duration">{% trans %}Duration{% endtrans %}</label>
-        <select id="duration" name="duration" class="form-control" onchange="submitForm(this);">
-            <option value="" {% if app.request.query.get('duration') == "" %} selected="selected" {% endif %}>{% trans%}Any{% endtrans %}</option>
-            {% if faceted_results['durations'][0] is defined and faceted_results['durations'][0] != 0 %}
-                <option value="0" {% if app.request.query.get('duration') == "0" %} selected="selected" {% endif %}>{% trans %}Unknown{% endtrans %} ({{ faceted_results['durations'][0]|default(0) }})</option>
-            {% endif %}
-            {% if faceted_results['durations'][-5] is defined and faceted_results['durations'][-5] != 0 %}
-            <option value="-5" {% if app.request.query.get('duration') == "-5" %} selected="selected" {% endif %}>{% trans %}From 0 to 5 minutes{% endtrans %} ({{ faceted_results['durations'][-5]|default(0) }})</option>
-            {% endif %}
-            {% if faceted_results['durations'][-10] is defined and faceted_results['durations'][-10] != 0 %}
-            <option value="-10" {% if app.request.query.get('duration') == "-10" %} selected="selected" {% endif %}>{% trans %}From 5 to 10 minutes{% endtrans %} ({{ faceted_results['durations'][-10]|default(0) }})</option>
-            {% endif %}
-            {% if faceted_results['durations'][-30] is defined and faceted_results['durations'][-30] != 0 %}
-            <option value="-30" {% if app.request.query.get('duration') == "-30" %} selected="selected" {% endif %}>{% trans %}From 10 to 30 minutes{% endtrans %} ({{ faceted_results['durations'][-30]|default(0) }})</option>
-            {% endif %}
-            {% if faceted_results['durations'][-60] is defined and faceted_results['durations'][-60] != 0 %}
-            <option value="-60" {% if app.request.query.get('duration') == "-60" %} selected="selected" {% endif %}>{% trans %}From 30 to 60 minutes{% endtrans %} ({{ faceted_results['durations'][-60]|default(0) }})</option>
-            {% endif %}
-            {% if faceted_results['durations'][60] is defined and faceted_results['durations'][60] != 0 %}
-            <option value="+60" {% if app.request.query.get('duration') == "+60" %} selected="selected" {% endif %}>{% trans %}More than 60 minutes{% endtrans %} ({{ faceted_results['durations'][60]|default(0) }})</option>
-            {% endif %}
-        </select>
-    </div>
-
-    <div class="form-group col-md-2 col-sm-3 col-xs-6">
-        <label for="type">{% trans %}Format{% endtrans %}</label>
-        <select id="type" name="type" class="form-control"  onchange="submitForm(this);">
-            <option value="" {% if app.request.query.get('type') == "" %} selected="selected" {% endif %}>{% trans %}Any{% endtrans %}</option>
-            {% for type, count in faceted_results['types'] if type != "" %}
-            <option value="{{type}}" {% if app.request.query.get('type') == type %} selected="selected" {% endif %}>{{ type|capitalize|trans }} ({{ count }})</option>
-            {% endfor %}
-        </select>
-    </div>
-
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="form-group col-md-3 col-sm-6">
-                <label for="search">{% trans %}Search term{% endtrans %}</label>
-                <div class="input-group">
-                    <input type="text" class="form-control" id="search" name="search" value="{{ app.request.query.get('search') }}" placeholder="Search...">
-                    <div class="input-group-addon">
-                        <button type="submit" >
-                            <span class="glyphicon glyphicon-search"></span>
-                        </button>
-                    </div>
+        <div class="form-group col-md-2 col-sm-3 col-xs-6">
+            <label for="type">{% trans %}Format{% endtrans %}</label>
+            <select id="type" name="type" class="form-control"  onchange="submitForm(this);">
+                <option value="" {% if app.request.query.get('type') == "" %} selected="selected" {% endif %}>{% trans %}Any{% endtrans %}</option>
+                {% for type, count in faceted_results['types'] if type != "" %}
+                    <option value="{{type}}" {% if app.request.query.get('type') == type %} selected="selected" {% endif %}>{{ type|capitalize|trans }} ({{ count }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="form-group pull-right">
+                    <label for="reset">{% trans %}Clear filters{% endtrans %}</label>
+                    <input style="max-width:90px; margin: 0 auto;" type="button" class="btn btn-default form-control" id="exampleInputEmail1" placeholder="Email" value="{% trans %}Reset{% endtrans %}"
+                           onclick="window.location.href=window.location.pathname">
                 </div>
             </div>
-            <div class="form-group col-md-offset-7 col-sm-offset-4 col-sm-2">
-                <label for="reset">{% trans %}Clear filters{% endtrans %}</label>
-                <input style="max-width:90px; margin: 0 auto;" type="button" class="btn btn-default form-control" id="exampleInputEmail1" placeholder="Email" value="{% trans %}Reset{% endtrans %}"
-                onclick="window.location.href=window.location.pathname">
-            </div>
         </div>
+
+        <script type="text/javascript">
+         $(function() {
+             $( "#start" ).datetimepicker({useCurrent: false, viewMode: 'years', format: 'DD/MM/YYYY'});
+             $( "#start" ).on("dp.change", function(e){$("#form_search").submit();});
+             $( "#end" ).datetimepicker({useCurrent: false, viewMode: 'years', format: 'DD/MM/YYYY'});
+             $( "#end" ).on("dp.change", function(e){$("#form_search").submit();});
+
+         });
+         function submitForm(elem) {
+             $('#search_spinner').show();
+             $('#search_results').hide();
+             $('.pagination').hide();
+             elem.form.submit();
+         }
+         $('#form_search').submit(function() {
+             submitForm(this);
+         });
+        </script>
+
     </div>
-
-    <script type="text/javascript">
-    $(function() {
-        $( "#start" ).datetimepicker({useCurrent: false, viewMode: 'years', format: 'DD/MM/YYYY'});
-        $( "#start" ).on("dp.change", function(e){$("#form_search").submit();});
-        $( "#end" ).datetimepicker({useCurrent: false, viewMode: 'years', format: 'DD/MM/YYYY'});
-        $( "#end" ).on("dp.change", function(e){$("#form_search").submit();});
-
-    });
-     function submitForm(elem) {
-         $('#search_spinner').show();
-         $('#search_results').hide();
-         $('.pagination').hide();
-         elem.form.submit();
-     }
-     $('#form_search').submit(function() {
-         submitForm(this);
-     });
-    </script>
-
 </form>
+<script>
+ {% for key, tag in children_tag_optional if (tag.title != "" and not tag.getProperty('empty',false)) %}
+ $('.tag_{{tag.cod}}').append(document.createTextNode('({{ faceted_results['tags'][tag.cod]|default(0) }})'))
+ {% endfor %}
+</script>

@@ -17,6 +17,7 @@ class WidgetController extends BaseWidgetController
         $channels = array();
         $events = array();
         $selected = $this->container->get('request_stack')->getMasterRequest()->get('_route');
+        $request = $this->container->get('request_stack')->getMasterRequest();
 
         $menuStats = $this->container->getParameter('menu.show_stats');
         $homeTitle = $this->container->getParameter('menu.home_title');
@@ -24,6 +25,20 @@ class WidgetController extends BaseWidgetController
         $searchTitle = $this->container->getParameter('menu.search_title');
         $mediatecaTitle = $this->container->getParameter('menu.mediateca_title');
         $categoriesTitle = $this->container->getParameter('menu.categories_title');
+        $repositories = array();
+        // --- Get Tag Parent for Tag Fields ---
+        $parentTag = $this->getParentTag();
+        $parentTagOptional = $this->getOptionalParentTag();
+
+        $repositories = array();
+        if ($parentTagOptional) {
+            foreach ($parentTagOptional->getChildren() as $children) {
+                $repositories[$children->getTitle()] = $children;
+            }
+            ksort($repositories);
+        }
+        // --- END Get Tag Parent for Tag Fields ---
+
 
         return array(
             'live_events' => $events,
@@ -35,6 +50,8 @@ class WidgetController extends BaseWidgetController
             'search_title' => $searchTitle,
             'mediateca_title' => $mediatecaTitle,
             'categories_title' => $categoriesTitle,
+            'repositories' => $repositories,
+            'request' => $request,
         );
     }
 
@@ -86,5 +103,31 @@ class WidgetController extends BaseWidgetController
         $route = ($request->headers->has('referer')) ? $request->headers->get('referer') : 'pumukit_webtv_index_index';
 
         return $this->redirect($route);
+    }
+
+    protected function getParentTag()
+    {
+        $tagRepo = $this->get('doctrine_mongodb')->getRepository('PumukitSchemaBundle:Tag');
+        $searchByTagCod = $this->container->getParameter('search.parent_tag.cod');
+
+        $parentTag = $tagRepo->findOneByCod($searchByTagCod);
+        if (!isset($parentTag)) {
+            throw new \Exception(sprintf('The parent Tag with COD:  \' %s  \' does not exist. Check if your tags are initialized and that you added the correct \'cod\' to parameters.yml (search.parent_tag.cod)', $searchByTagCod));
+        }
+
+        return $parentTag;
+    }
+
+    protected function getOptionalParentTag()
+    {
+        $tagRepo = $this->get('doctrine_mongodb')->getRepository('PumukitSchemaBundle:Tag');
+
+        $searchByTagCod = $this->container->getParameter('search.parent_tag_2.cod');
+        $parentTagOptional = null;
+        if ($searchByTagCod) {
+            $parentTagOptional = $tagRepo->findOneByCod($searchByTagCod);
+        }
+
+        return $parentTagOptional;
     }
 }
