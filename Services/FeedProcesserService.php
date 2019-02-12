@@ -299,6 +299,9 @@ class FeedProcesserService
         if (!$embedUrl) {
             $embedUrl = $this->getUnedEmbedUrl($url);
         }
+        if (!$embedUrl) {
+            $embedUrl = $this->getPoddiumUrl($url);
+        }
 
         return $embedUrl;
     }
@@ -340,5 +343,24 @@ class FeedProcesserService
         }
 
         return $embedUrl;
+    }
+
+    /**
+     * Returns the embedded url for a poddium. video given its url. If it can't parse the uned mmobj id, it returns false.
+     */
+    private function getPoddiumUrl($url)
+    {
+        $poddiumUrl = 'https://poddium.eu/iframe/';
+        if (false !== strpos($poddiumUrl, $url)) {
+            return $url;
+        }
+
+        $poddiumUrl = 'https://poddium.eu/video/';
+        if (false !== strpos($poddiumUrl, $url)) {
+            return str_replace('/video/', '/iframe/', $url);
+        }
+
+
+        return false;
     }
 }
