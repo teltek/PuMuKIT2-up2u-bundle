@@ -3,10 +3,20 @@
 namespace Pumukit\Up2u\WebTVBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Pumukit\WebTVBundle\Controller\IndexController as ParentController;
 
 class IndexController extends ParentController
 {
+    /**
+     * @Route("/", name="pumukit_webtv_index_index")
+     * @Template()
+     */
+    public function indexAction()
+    {
+        return $this->redirectToRoute('pumukit_webtv_search_multimediaobjects');
+    }
+
     /**
      * @Template()
      */
