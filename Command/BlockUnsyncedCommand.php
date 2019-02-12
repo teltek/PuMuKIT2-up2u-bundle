@@ -43,8 +43,8 @@ class BlockUnsyncedCommand extends ContainerAwareCommand
             $feedSyncService->setFeedUrl($customUrl);
         }
 
-        $startTime = new \MongoDate(strtotime("-7 days"));
-        $output->writeln("\nSYNC FINISHED: Blocking Unsynced from " . date('Y-M-d h:i:s', $startTime->sec). "..");
+        $startTime = new \MongoDate(strtotime('-7 days'));
+        $output->writeln("\nSYNC FINISHED: Blocking Unsynced from ".date('Y-M-d h:i:s', $startTime->sec).'..');
         $feedSyncService->blockUnsynced($output, $startTime, $tag);
         //SHUTDOWN HAPPILY
     }

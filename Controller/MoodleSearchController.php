@@ -7,7 +7,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Pumukit\SchemaBundle\Document\Tag;
-use Pumukit\Up2u\WebTVBundle\Controller\SearchController;
 
 /**
  * @Route("/pumoodle")

@@ -16,6 +16,7 @@ class FeedSyncClientService
         $this->saveLogs = $saveLogs;
         $this->init();
     }
+
     public function init()
     {
         //TODO DO I NEED INITS?

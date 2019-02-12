@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -17,11 +18,9 @@
 /**
  * Strings for component 'atto_pumukit', language 'en'.
  *
- * @package    atto_pumukit
  * @copyright  2013 Damyon Wiese  <damyon@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 $string['pluginname'] = 'Select eduOER content';
 $string['settings'] = 'PuMuKIT (Atto)';
 $string['dialogtitle'] = 'Modal dialog title';

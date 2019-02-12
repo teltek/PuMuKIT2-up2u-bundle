@@ -63,7 +63,7 @@ class ResetPublicDateCommand extends ContainerAwareCommand
         $eta_sec = ($total * $elapsed_sec) / $processed;
         $eta_min = $eta_sec / 60;
         $elapsed_min = $elapsed_sec / 60;
-        $processed_min = (integer) ($processed / $elapsed_min);
+        $processed_min = (int) ($processed / $elapsed_min);
         $text = sprintf("Progress %s/%s\n", $processed, $total);
         $text .= 'Elapsed time: '.sprintf('%.2F', $elapsed_min).
                 ' minutes - estimated: '.sprintf('%.2F', $eta_min).

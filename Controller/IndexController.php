@@ -2,10 +2,7 @@
 
 namespace Pumukit\Up2u\WebTVBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Pumukit\SchemaBundle\Document\MultimediaObject;
 use Pumukit\WebTVBundle\Controller\IndexController as ParentController;
 
 class IndexController extends ParentController
@@ -26,6 +23,6 @@ class IndexController extends ParentController
 
         return array('template_title' => $templateTitle,
                      'last' => $lastMms,
-                     'number_cols' => $numberCols );
+                     'number_cols' => $numberCols, );
     }
 }

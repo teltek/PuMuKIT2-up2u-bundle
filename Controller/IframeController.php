@@ -19,7 +19,7 @@ class IframeController extends PlayerController
 
         return array(
             'multimediaObject' => $multimediaObject,
-            'iframe_url' => $iframeUrl, 
+            'iframe_url' => $iframeUrl,
         );
     }
 }

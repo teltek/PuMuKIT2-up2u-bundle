@@ -5,7 +5,6 @@ namespace Pumukit\Up2u\WebTVBundle\Services;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Pumukit\SchemaBundle\Document\MultimediaObject;
 use Pumukit\SchemaBundle\Document\Person;
-use Pumukit\SchemaBundle\Document\Series;
 use Pumukit\SchemaBundle\Document\Tag;
 use Pumukit\SchemaBundle\Document\Track;
 use Pumukit\SchemaBundle\Services\FactoryService;
@@ -98,7 +97,7 @@ class FeedSyncService
         $output->writeln('...Blocking non-updated mmobjs...');
 
         $count = $qb->getQuery()->count();
-        $qb->update()->multiple(true)->field('satus')->set(MultimediaObject::STATUS_BLOQ);
+        $qb->update()->multiple(true)->field('status')->set(MultimediaObject::STATUS_BLOQ);
         $qb->getQuery()
             ->execute();
 
@@ -108,12 +107,12 @@ class FeedSyncService
         if ($tag) {
             $qb->field('properties.geant_tag')->equals($tag);
         }
-        $qb->field('status')->notEqual(MultimediaObject::STATUS_BLOQ)->field('properties.geant_type')->in(array("external link", "video flv"));
+        $qb->field('status')->notEqual(MultimediaObject::STATUS_BLOQ)->field('properties.geant_type')->in(array('external link', 'video flv'));
 
         $output->writeln('...Blocking flv and external link mmobjs...');
 
         $count = $qb->getQuery()->count();
-        $qb->update()->multiple(true)->field('satus')->set(MultimediaObject::STATUS_BLOQ);
+        $qb->update()->multiple(true)->field('status')->set(MultimediaObject::STATUS_BLOQ);
         $qb->getQuery()
             ->execute();
 
@@ -444,7 +443,14 @@ class FeedSyncService
             $track->setOnlyAudio(false);
             $mmobj->setProperty('redirect', false);
             $mmobj->setProperty('iframeable', false);
-            $mmobj->setProperty('geant_type', strpos($url, '.flv') ? 'video flv' : 'video');
+
+            if (strpos($url, '.flv')) {
+                $mmobj->setProperty('geant_type', 'video flv');
+                $mmobj->setStatus(MultimediaObject::STATUS_BLOQ);
+            } else {
+                $mmobj->setProperty('geant_type', 'video');
+            }
+
             $extension = ($formatType == 'video' && in_array($formatExtension, $this->VIDEO_EXTENSIONS)) ? $formatExtension : $urlExtension;
             $mimeType = isset($this->VIDEO_MIMETYPES[$extension]) ? $this->VIDEO_MIMETYPES[$extension] : '';
             $track->setMimeType($mimeType);
@@ -474,6 +480,7 @@ class FeedSyncService
                 $mmobj->setProperty('iframeable', false);
                 $mmobj->setProperty('redirect_url', $url);
                 $mmobj->setProperty('geant_type', 'external link');
+                $mmobj->setStatus(MultimediaObject::STATUS_BLOQ);
             }
         }
         $this->dm->persist($track);
@@ -552,7 +559,7 @@ class FeedSyncService
                 $provider->setProperty('description', $providerData['description']);
                 $providerTitle = sprintf('%s - %s', $provider->getProperty('geant_repository'), $providerData['title']);
                 $provider->setTitle($providerTitle);
-                if(isset($providerData['thumbnail_url']) && !empty($providerData['thumbnail_url'])){
+                if (isset($providerData['thumbnail_url']) && !empty($providerData['thumbnail_url'])) {
                     $thumbnailUrl = $this->parseThumbnailUrl($providerData['thumbnail_url']);
                 } else {
                     $thumbnailUrl = $defaultThumbnail;

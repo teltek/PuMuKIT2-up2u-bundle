@@ -34,6 +34,7 @@ class SyncReposMetadataCommand extends ContainerAwareCommand
                 'If set, the task will use the repos-directory (/tmp/pmkgeant by default)'
             );
     }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $formatter = $this->getHelper('formatter');
