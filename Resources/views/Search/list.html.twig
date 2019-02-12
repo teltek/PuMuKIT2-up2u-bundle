@@ -9,8 +9,8 @@
     {% endif %}
   </div>
   <div style="clear: both">{# PREVENTS MMOBJS FROM EXTENDING TO TOP #}</div>
-  <div id="search_results">
-    <p style="padding-left: 15px; color: black; font-weight: bold; font-size: 1.2em;">
+  <div id="search_results" style="margin: 23px 5px;">
+    <p style="padding-left: 23px; color: black; font-weight: bold; font-size: 1.2em;">
       {% trans %}Total search results:{% endtrans %} {{total_objects}}
     </p>
     {% for object in objects %}
