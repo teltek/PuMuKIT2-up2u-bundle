@@ -39,7 +39,6 @@ class WidgetController extends BaseWidgetController
         }
         // --- END Get Tag Parent for Tag Fields ---
 
-
         return array(
             'live_events' => $events,
             'live_channels' => $channels,

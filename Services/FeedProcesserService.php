@@ -357,7 +357,6 @@ class FeedProcesserService
             return str_replace('/video/', '/iframe/', $url);
         }
 
-
         return false;
     }
 }
