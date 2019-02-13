@@ -2,7 +2,9 @@
     <input type="submit" style="display:none"/>
 
     <!--//SEARCH BOX-->
-    <div class="search-box" align="center">
+    <div class="row ">
+        <div class="col-sm-3"></div>
+        <div class="search-box col-sm-6" align="center">
         <div class="input-group stylish-input-group">
             <label for="search" class="sr-only">{% trans %}Search OERs...{% endtrans %}</label>
             <input type="text" class="form-control" placeholder="{% trans %} Search OERs {% endtrans %}..." name="search" id="search" value="{{ app.request.query.get('search') }}">
@@ -14,7 +16,8 @@
             </span>
         </div>
     </div>
-    <div class="advanced_search_title" >Advanced filters</div>
+    </div>
+    <div class="advanced_search_title" style="font-size: 1.25em; font-weight: bold; color: #004361;" >Advanced filters</div>
 
     <div class="advanced_search_box" id="advanced_search_box">
         {% if parent_tag_optional is not null and ( blocked_tag is null or not blocked_tag.isDescendantOf(parent_tag_optional)) %}
@@ -95,12 +98,16 @@
             </select>
         </div>
         <div class="row">
-            <div class="col-xs-12">
-                <div class="form-group pull-right">
+            <div class="col-xs-12" >
+                <div class="form-group pull-left" style="max-width:90px; margin: 0 15px;">
                     <label for="reset">{% trans %}Clear filters{% endtrans %}</label>
-                    <input style="max-width:90px; margin: 0 auto;" type="button" class="btn btn-default form-control" id="exampleInputEmail1" placeholder="Email" value="{% trans %}Reset{% endtrans %}"
-                           onclick="window.location.href=window.location.pathname">
-                </div>
+                    <input style="max-width:90px; margin: 0;" type="button" class="btn btn-default form-control" id="reset" value="{% trans %}Reset{% endtrans %}"
+                        onclick="window.location.href=window.location.pathname">
+            </div>
+            <div class="row form-group pull-right">
+                <label for="submit">{% trans %}Search{% endtrans %}</label>
+                <input style="max-width:90px; margin: 0 0;" type="submit" class="btn btn-default form-control" id="submit" value="{% trans %}Search{% endtrans %}">
+            </div>
             </div>
         </div>
 
