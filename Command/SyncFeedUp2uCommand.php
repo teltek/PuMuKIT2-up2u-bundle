@@ -82,9 +82,6 @@ class SyncFeedUp2uCommand extends ContainerAwareCommand
 
         $output->writeln("\nStarting sync...\n");
         $startTime = $feedSyncService->sync($output, $limit, $optWall, $provider, $verbose, $show_bar, $tag);
-        $output->writeln("\nSYNC FINISHED: Blocking Unsynced..");
-        $feedSyncService->blockUnsynced($output, $startTime, $tag);
-        //SHUTDOWN HAPPILY
     }
 
     protected function getCommandHelpText()
