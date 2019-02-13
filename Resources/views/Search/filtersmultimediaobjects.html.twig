@@ -55,7 +55,7 @@
             <select id='year' name='year' class='form-control' onchange="submitForm(this);">
                 <option value="" {% if app.request.query.get('year') == "" %} selected="selected" {% endif %}>{% trans%}Any{% endtrans %}</option>
                 {% for year,count in faceted_results['years'] %}
-                    <option value="{{year}}" {% if app.request.query.get('year') == year %} selected="selected" {% endif %}>{{year}} ({{ count }})</option>
+                    <option value="{{year}}" {% if app.request.query.get('year') == year %} selected="selected" {% endif %}>{{ year == 1970 ? ' Other years' : year }} ({{ count }})</option>
                 {% endfor %}
             </select>
         </div>
