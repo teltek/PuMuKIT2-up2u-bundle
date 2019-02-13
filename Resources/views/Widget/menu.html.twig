@@ -36,25 +36,3 @@
         {{ render(controller('PumukitWebTVBundle:Widget:stats')) }}
     </div>
 {% endif %}
-
-<!-- Repositories -->
-<div class="row widget repository_list">
-    <h4> Repositories: </h4>
-    <div class="col-xs-12">
-        <a href="{{ path('pumukit_webtv_search_multimediaobjects', request.query.all())}}">
-            <li class="repository_filter">
-                All repositories
-            </li>
-        </a>
-        {% for key, tag in repositories if (tag.title != "" and not tag.getProperty('empty', false)) %}
-            <a href="{{ path('pumukit_webtv_search_multimediaobjects', request.query.all() | merge({'tagCod': tag.cod}))}}">
-                <li class="repository_filter tag_{{ tag.cod }}">
-                    {{ tag.title }}
-                </li>
-            </a>
-            {#
-            <a value="{{tag.cod}}" {% if tag.cod in tags_found %} selected="selected" {% endif %}>{{ tag.title }} ({{ faceted_results['tags'][tag.cod]|default(0) }})</option>
-            #}
-        {% endfor %}
-    </div>
-</div>
