@@ -106,19 +106,12 @@
             </div>
             <div class="row form-group pull-right">
                 <label for="submit">{% trans %}Search{% endtrans %}</label>
-                <input style="max-width:90px; margin: 0 0;" type="submit" class="btn btn-default form-control" id="submit" value="{% trans %}Search{% endtrans %}">
+                <input style="max-width:90px; margin: 0 0;" type="submit" class="btn btn-default form-control" id="submit_button" value="{% trans %}Search{% endtrans %}">
             </div>
             </div>
         </div>
 
         <script type="text/javascript">
-         $(function() {
-             $( "#start" ).datetimepicker({useCurrent: false, viewMode: 'years', format: 'DD/MM/YYYY'});
-             $( "#start" ).on("dp.change", function(e){$("#form_search").submit();});
-             $( "#end" ).datetimepicker({useCurrent: false, viewMode: 'years', format: 'DD/MM/YYYY'});
-             $( "#end" ).on("dp.change", function(e){$("#form_search").submit();});
-
-         });
          function submitForm(elem) {
              $('#search_spinner').show();
              $('#search_results').hide();
