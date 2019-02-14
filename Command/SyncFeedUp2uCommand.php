@@ -63,7 +63,7 @@ class SyncFeedUp2uCommand extends ContainerAwareCommand
     {
         $formatter = $this->getHelper('formatter');
         $text = $this->getCommandASCIIHeader();
-        $text .= "\nAt ". (new \DateTime())->format("c");
+        $text .= "\nAt ".(new \DateTime())->format('c');
         $formattedBlock = $formatter->formatBlock($text, 'comment', true);
         $output->writeln($formattedBlock);
         //EXECUTE SERVICE
@@ -82,8 +82,11 @@ class SyncFeedUp2uCommand extends ContainerAwareCommand
 
         $output->writeln("\nStarting sync...\n");
         $startTime = $feedSyncService->sync($output, $limit, $optWall, $provider, $verbose, $show_bar, $tag);
-        $output->writeln("\nSYNC FINISHED: Blocking Unsynced..");
-        $feedSyncService->blockUnsynced($output, $startTime, $tag);
+
+        if (!$provider) {
+            $output->writeln("\nSYNC FINISHED: Blocking Unsynced..");
+            $feedSyncService->blockUnsynced($output, $startTime, $tag);
+        }
         //SHUTDOWN HAPPILY
     }
 
