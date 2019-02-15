@@ -26,7 +26,7 @@
                 <select id="tags" name="tags[]" class="form-control" onchange="submitForm(this);">
                     <option value="" {% if tags_found == "" %} selected="selected" {% endif %}>Any</option>
                     {% for key, tag in children_tag_optional if (tag.title != "" and not tag.getProperty('empty',false) and faceted_results['tags'][tag.cod] is defined) %}
-                        <option value="{{tag.cod}}" {% if tag.cod in tags_found %} selected="selected" {% endif %}>{{ tag.title }} ({{ faceted_results['tags'][tag.cod]|default(0) }})</option>
+                        <option value="{{tag.cod}}" {% if tag.cod in tags_found %} selected="selected" {% endif %}>{{ tag.title }} ({{ faceted_results['tags'][tag.cod] }})</option>
                     {% endfor %}
                 </select>
             </div>
@@ -36,8 +36,8 @@
                 <label for="tags">{% trans %} Subject{% endtrans %}</label>
                 <select id="tags" name="tags[]" class="form-control" onchange="submitForm(this);">
                     <option value="" {% if tags_found == "" %} selected="selected" {% endif %}>Any</option>
-                    {% for tag in parent_tag.children if tag.title != "" and tags[tag.cod] is defined and tags[tag.cod] > 0 %}
-                        <option value="{{tag.cod}}" {% if tag.cod in tags_found %} selected="selected" {% endif %}>{{ tag.title }} ({{ tags[tag.cod]|default(0) }})</option>
+                    {% for tag in parent_tag.children if tag.title != "" and faceted_results['tags'][tag.cod] is defined and faceted_results['tags'][tag.cod] > 0 %}
+                        <option value="{{tag.cod}}" {% if tag.cod in tags_found %} selected="selected" {% endif %}>{{ tag.title }} ({{ faceted_results['tags'][tag.cod] }})</option>
                     {% endfor %}
                 </select>
             </div>
