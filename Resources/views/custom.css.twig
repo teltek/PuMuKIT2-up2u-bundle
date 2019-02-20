@@ -16,8 +16,23 @@
 {% set breadcrumbs_separator = " " %}
 {% set page_background = 'white' %}
 {% set mmobj_selected_background = '#E9E9E9' %}
+{% set hide_slidebar = true %}
 {{ parent() }}
 {# Add your own CSS rules #}
+.pmk-content {
+    min-height: calc(100vh - 80px - 40px - 40px - 36px);
+}
+.fancy-header {
+    margin-top: 5px;
+}
+footer {
+    text-align: right;
+}
+footer .link {
+    color: white;
+    padding: 5px;
+}
+
 .icon-share:before {
     content: '\e1214';
     font-family: fontello;
@@ -321,14 +336,13 @@ select.form-control {
     background: {{default_contrast_background}};
     color: #fff;
 }
-#form_search {
+.advanced_search_box {
     padding-top: 10px;
     color: {{default_light_font}};
     background: {{panel_default_background}};
-    margin: 0px 0px 5px;
-
+    margin: 5px 8px;
 }
-#form_search label{
+.advanced_search_box label{
     font-weight: normal;
 }
 #search-box {
@@ -356,7 +370,7 @@ select.form-control {
     border-bottom-right-radius: 0;
     border-top-right-radius: 0;
 }
-#form_search button:last-child {
+.advanced_search_box button:last-child {
     border:0;
     background:transparent;
 }
@@ -364,12 +378,10 @@ select.form-control {
     padding: 1px 6px;
 }
 
-
-
-#form_search .input-group-addon:last-child {
+.advanced_search_box .input-group-addon:last-child {
     background: #f3f3f3;
 }
-#form_search input.btn-default.form-control {
+.advanced_search_box input.btn-default.form-control {
     background: #f3f3f3;
     background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fff), color-stop(25%, #fff), to(#e6e6e6));
     background-image: -webkit-linear-gradient(#fff, #fff 25%, #e6e6e6);
@@ -380,6 +392,12 @@ select.form-control {
     background-repeat-x: no-repeat;
     background-repeat-y: no-repeat;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFFFF', endColorstr='#FFE6E6E6', GradientType=0);
+}
+.advanced_search_title {
+    padding-top: 10px;
+    color: {{default_light_font}};
+    font-weight: normal;
+    margin: 5px 8px;
 }
 .search-box .advanced-search {
     margin-top:8px;

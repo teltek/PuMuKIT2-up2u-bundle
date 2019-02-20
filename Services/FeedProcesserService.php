@@ -348,15 +348,14 @@ class FeedProcesserService
     private function getPoddiumUrl($url)
     {
         $poddiumUrl = 'https://poddium.eu/iframe/';
-        if (false !== strpos($poddiumUrl, $url)) {
+        if (false !== strpos($url, $poddiumUrl)) {
             return $url;
         }
 
         $poddiumUrl = 'https://poddium.eu/video/';
-        if (false !== strpos($poddiumUrl, $url)) {
+        if (false !== strpos($url, $poddiumUrl)) {
             return str_replace('/video/', '/iframe/', $url);
         }
-
 
         return false;
     }

@@ -1,31 +1,32 @@
 {% extends 'PumukitWebTVBundle::layout.html.twig' %}
 
 {% block body %}
-  <div class="row">
-    <div class="col-xs-12">
-      <div class="row">
+    <div class="row">
         <div class="col-xs-12">
-          {% if blocked_tag is defined and blocked_tag is not null %}
-            <h1 class="title-for-crumbs no-hide">{{ blocked_tag.title }}</h1>
-          {% else %}
-            <h1 class="title-for-crumbs no-hide">
-              {% if template_title %}
-                {{ template_title |trans }}
-              {% else %}
-                {% trans %} Advanced Search {% endtrans %}
-              {% endif %}
-            </h1>
-          {% endif %}
+            <div class="row">
+                <div class="col-xs-12">
+                    <br>
+                    {% if blocked_tag is defined and blocked_tag is not null %}
+                        <h1 class="title-for-crumbs no-hide">{{ blocked_tag.title }}</h1>
+                    {% else %}
+                        <div align="center" class="fancy-header">
+                            <h2>
+                                <b>Welcome to the edu<font color="#e81657">OER</font> Portal </b>
+                            </h2>
+                        </div>
+                    {% endif %}
+                    <br>
+
+                </div>
+            </div>
+            <div class="row">
+                {% include 'PumukitWebTVBundle:Search:list.html.twig' %}
+            </div>
+            {% if objects|length > 0%}
+                <div class="row">
+                    {% include 'PumukitWebTVBundle:Misc:pager.html.twig' %}
+                </div>
+            {% endif %}
         </div>
-      </div>
-      <div class="row">
-        {% include 'PumukitWebTVBundle:Search:list.html.twig' %}
-      </div>
-      {% if objects|length > 0%}
-        <div class="row">
-          {% include 'PumukitWebTVBundle:Misc:pager.html.twig' %}
-        </div>
-      {% endif %}
     </div>
-  </div>
 {% endblock %}
