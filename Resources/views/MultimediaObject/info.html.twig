@@ -65,7 +65,7 @@
           <dt>{% trans %}ARIADNE repository:{% endtrans %}</dt>
           <dd>{{ multimediaObject.getSeries().getProperty('geant_repository') | default('~') }}</dd>
           <dt>{% trans %}ARIADNE license:{% endtrans %}</dt>
-          <dd>{{ multimediaObject.getCopyright() | default('~') }}</dd>
+          <dd>{{ multimediaObject.getLicense() | default('~') }}</dd>
         </dl>
       </details>
     </div>
