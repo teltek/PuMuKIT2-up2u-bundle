@@ -29,7 +29,7 @@ $settings = new admin_settingpage('atto_pumukit_settings', new lang_string('sett
 if ($ADMIN->fulltree) {
     // An option setting
     $settings->add(new admin_setting_configtext('atto_pumukit/pumukiturl',
-        get_string('pumukiturl', 'atto_pumukit'), get_string('pumukiturldesc', 'atto_pumukit'), 'https://snf-683722.vm.okeanos.grnet.gr/pumoodle/searchmultimediaobjects', PARAM_URL));
+        get_string('pumukiturl', 'atto_pumukit'), get_string('pumukiturldesc', 'atto_pumukit'), 'https://snf-683722.vm.okeanos.grnet.gr/naked/searchmultimediaobjects', PARAM_URL));
 
     $settings->add(new admin_setting_configtext('atto_pumukit/dialogtitle',
         get_string('dialogtitle', 'atto_pumukit'), get_string('dialogtitledesc', 'atto_pumukit'), get_string('dialogtitledefval', 'atto_pumukit'), PARAM_TEXT));

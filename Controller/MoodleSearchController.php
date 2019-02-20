@@ -10,6 +10,7 @@ use Pumukit\SchemaBundle\Document\Tag;
 
 /**
  * @Route("/pumoodle")
+ * @Route("/naked")
  */
 class MoodleSearchController extends SearchController
 {
