@@ -48,22 +48,20 @@
               <div style="overflow:hidden;height:1.2em;text-overflow:ellipsis; width:100%;white-space: nowrap;" title="{{object.series.title}}">{{object.series.title}}</div>
             {% endif %}
           </div>
-          <p>
-            <div class="date mmobj pull-left">
-              {% trans %}Recorded:{% endtrans %}
-              {% if object.getRecordDate()|date("Y") == "1970" %}
-                  Unknown
-              {% else %}
-                  {{object.recordDate|date("d/m/Y")}}
-              {% endif%}
-            </div>
-            <span class="mmobj-numviewed pull-right">
-              {% set num_viewed = object.numview %}
-              {% transchoice num_viewed %}
-              {1} Viewed %num_viewed% time. |[0, Inf]Viewed %num_viewed% times
-              {% endtranschoice %}
-            </span>
-          </p>
+          <div class="date mmobj pull-left">
+            {% trans %}Recorded:{% endtrans %}
+            {% if object.getRecordDate()|date("Y") == "1970" %}
+                Unknown
+            {% else %}
+                {{object.recordDate|date("d/m/Y")}}
+            {% endif%}
+          </div>
+          <div class="mmobj-numviewed pull-right">
+            {% set num_viewed = object.numview %}
+            {% transchoice num_viewed %}
+            {1} Viewed %num_viewed% time. |[0, Inf]Viewed %num_viewed% times
+            {% endtranschoice %}
+          </div>
           <div class="clearfix"></div>
           <p class="date mmobj language">
             {% trans %}Language{% endtrans %}: {{ object.getDisplayTrack() ? (object.getDisplayTrack().getLanguage()|language_name) : ('Unknown'|trans) }}
