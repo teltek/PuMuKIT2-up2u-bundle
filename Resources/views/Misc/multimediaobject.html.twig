@@ -56,16 +56,16 @@
                 {{object.recordDate|date("d/m/Y")}}
             {% endif%}
           </div>
-          <div class=" mmobj-numviewed">
+          <div class="mmobj-numviewed pull-right">
             {% set num_viewed = object.numview %}
             {% transchoice num_viewed %}
             {1} Viewed %num_viewed% time. |[0, Inf]Viewed %num_viewed% times
             {% endtranschoice %}
           </div>
-          <div class="clearfix visible-sm"></div>
-          <div class="date mmobj language">
-            {% trans %}Language{% endtrans %}: {{ object.getDisplayTrack().getLanguage()|language_name }}
-          </div>
+          <div class="clearfix"></div>
+          <p class="date mmobj language">
+            {% trans %}Language{% endtrans %}: {{ object.getDisplayTrack() ? (object.getDisplayTrack().getLanguage()|language_name) : ('Unknown'|trans) }}
+          </p>
         </div>
       </div>
     </div>
