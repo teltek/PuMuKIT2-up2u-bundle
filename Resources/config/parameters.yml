@@ -23,7 +23,7 @@ parameters:
     pumukit_web_tv.linktagtosearch:  true
     pumukit_web_tv.breadcrumbs_parentweb:
         title: 'Up2University'
-        url: 'https://up2university.eu/'
+        url: 'https://learn.up2university.eu/'
     geant.feedsyncservice.baseurl:  'https://services.oer.geant.org/search/v1/akif/'
     geant.savelogs: false
     
