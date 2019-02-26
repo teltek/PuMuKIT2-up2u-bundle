@@ -297,7 +297,10 @@ class FeedProcesserService
             $embedUrl = $this->getUnedEmbedUrl($url);
         }
         if (!$embedUrl) {
-            $embedUrl = $this->getPoddiumUrl($url);
+            $embedUrl = $this->getPMK2Url('https://poddium.eu', $url);
+        }
+        if (!$embedUrl) {
+            $embedUrl = $this->getPMK2Url('https://tv.campusdomar.es', $url);
         }
 
         return $embedUrl;
@@ -343,17 +346,17 @@ class FeedProcesserService
     }
 
     /**
-     * Returns the embedded url for a poddium. video given its url. If it can't parse the uned mmobj id, it returns false.
+     * Returns the embedded url for a standard PMK2 video given its url. If it can't parse the url, it returns false.
      */
-    private function getPoddiumUrl($url)
+    private function getPMK2Url($domain, $url)
     {
-        $poddiumUrl = 'https://poddium.eu/iframe/';
-        if (false !== strpos($url, $poddiumUrl)) {
+        $pmk2Url = $domain.'/iframe/';
+        if (false !== strpos($url, $pmk2Url)) {
             return $url;
         }
 
-        $poddiumUrl = 'https://poddium.eu/video/';
-        if (false !== strpos($url, $poddiumUrl)) {
+        $pmk2Url = $domain.'/video/';
+        if (false !== strpos($url, $pmk2Url)) {
             return str_replace('/video/', '/iframe/', $url);
         }
 
