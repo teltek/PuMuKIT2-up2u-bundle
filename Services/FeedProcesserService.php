@@ -32,7 +32,7 @@ class FeedProcesserService
         try {
             $date = $this->retrieveDate($geantFeedObject);
         } catch (FeedSyncException $e) {
-            $date = new \DateTime('1/1/1970Z01:00:00Z');
+            $date = new \DateTime('01/01/0001Z01:00:00Z');
             $processedObject['geantErrors']['date'] = $e->getMessage();
         }
 
@@ -235,6 +235,10 @@ class FeedProcesserService
 
     private function processDateField($dateString, $geantFeedObject)
     {
+        //We set years to y-01-01.
+        if(preg_match('/^\d{4}$/', $dateString)){
+            $dateString .= "-01-01";
+        }
         try {
             $date = new \DateTime($dateString);
         } catch (\Exception $e) {
