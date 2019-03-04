@@ -32,7 +32,7 @@ class FeedProcesserService
         try {
             $date = $this->retrieveDate($geantFeedObject);
         } catch (FeedSyncException $e) {
-            $date = new \DateTime('01/01/0001Z01:00:00Z');
+            $date = new \DateTime('0000-01-01T00:00:00Z');
             $processedObject['geantErrors']['date'] = $e->getMessage();
         }
 
@@ -128,8 +128,8 @@ class FeedProcesserService
         if (!isset($date)) {
             throw new FeedSyncException(sprintf('The feed with ID: %s does not have a "date" field', $geantFeedObject['identifier']));
         }
-
-        return $this->processDateField($date, $geantFeedObject);
+        $minimumDateTime = new \DateTime('1000-01-01');
+        return $this->processDateField($date, $geantFeedObject, $minimumDateTime);
     }
 
     private function retrieveTitle($geantFeedObject, $lang)
@@ -233,7 +233,7 @@ class FeedProcesserService
         return $people;
     }
 
-    private function processDateField($dateString, $geantFeedObject)
+    private function processDateField($dateString, $geantFeedObject, $minimumDateTime = null)
     {
         //We set years to y-01-01.
         if(preg_match('/^\d{4}$/', $dateString)){
@@ -243,6 +243,10 @@ class FeedProcesserService
             $date = new \DateTime($dateString);
         } catch (\Exception $e) {
             throw new FeedSyncException('The date: '.$dateString.' from the geant feed object id:'.$geantFeedObject['identifier'].'Could not be parsed');
+        }
+
+        if($minimumDateTime && $date < $minimumDateTime){
+            throw new FeedSyncException('The date: '.$dateString.' from the geant feed object id:'.$geantFeedObject['identifier'].'Is smaller than '.$minimumDateTime->format('Y-m-d').' .Not valid.');
         }
 
         return $date;
