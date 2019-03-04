@@ -1,23 +1,26 @@
 <div class="row header visible-lg">
-  {% block body_desktop %}
-    <div class="header-content">
-      <div class="col-sm-6">
-        <div class="row">
-          <div class="col-xs-12">
-            {% block logo_url %}
-              {% include 'PumukitWebTVBundle:Layout:logo.html.twig' %}
-            {% endblock %}
-          </div>
+    {% block body_desktop %}
+        <div class="header-content">
+            <div class="col-sm-6">
+                <div class="row">
+                    <div class="col-xs-12">
+                        {% block logo_url %}
+                            {% include 'PumukitWebTVBundle:Layout:logo.html.twig' %}
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <span class="pull-right">
+                    {% include 'PumukitWebTVBundle:Index:loginbox.html.twig' %}
+                </span>
+                <div class="row">
+                    {{ render( controller( 'PumukitWebTVBundle:Widget:languageselect') ) }}
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="col-sm-6">
-        <div class="row">
-          {{ render( controller( 'PumukitWebTVBundle:Widget:languageselect') ) }}
-        </div>
-      </div>
-    </div>
-  {% endblock %}
+    {% endblock %}
 </div>
 <div class="row hidden-lg">
-  {% include 'PumukitWebTVBundle:Layout:mobile_header.html.twig'%}
+    {% include 'PumukitWebTVBundle:Layout:mobile_header.html.twig'%}
 </div>
