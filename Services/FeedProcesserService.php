@@ -239,6 +239,12 @@ class FeedProcesserService
         if(preg_match('/^\d{4}$/', $dateString)){
             $dateString .= "-01-01";
         }
+
+        //The COCOON repository has the '(available)' string inside the date string.
+        if($pos = strpos($dateString, '(available)')){
+            $dateString = substr($dateString, 0, $pos);
+        }
+
         try {
             $date = new \DateTime($dateString);
         } catch (\Exception $e) {
