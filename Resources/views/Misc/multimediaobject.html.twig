@@ -50,7 +50,7 @@
           </div>
           <div class="date mmobj pull-left">
             {% trans %}Recorded:{% endtrans %}
-            {% if object.getRecordDate()|date("Y") == "1970" %}
+            {% if object.getRecordDate()|date("Y") == "0000" %}
                 Unknown
             {% else %}
                 {{object.recordDate|date("d/m/Y")}}

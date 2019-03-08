@@ -56,9 +56,9 @@
         <div class="form-group col-md-2 col-sm-3 col-xs-6">
             <label for="year">{% trans %}Year{% endtrans %}</label>
             <select id='year' name='year' class='form-control' onchange="submitForm(this);">
-                <option value="" {% if app.request.query.get('year') == "" %} selected="selected" {% endif %}>{% trans%}Any{% endtrans %}</option>
+                <option value="" {% if app.request.query.get('year') is same as("") %} selected="selected" {% endif %}>{% trans%}Any{% endtrans %}</option>
                 {% for year,count in faceted_results['years'] %}
-                    <option value="{{year}}" {% if app.request.query.get('year') == year %} selected="selected" {% endif %}>{{ year == 1970 ? ' Other years' : year }} ({{ count }})</option>
+                    <option value="{{year}}" {% if app.request.query.get('year') == ("%s"|format(year)) %} selected="selected" {% endif %}>{{ year is same as(0) ? ' Other years' : year }} ({{ count }})</option>
                 {% endfor %}
             </select>
         </div>
