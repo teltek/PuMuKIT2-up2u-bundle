@@ -439,6 +439,12 @@ class FeedSyncService
         $formatExtension = isset($format[1]) ? $format[1] : null;
 
         $mmobj->setProperty('opencast', false); //Workaround to prevent editing the Schema Filter for now.
+
+        # Workaround: The CMAR type is incorrectly set as 'video/mp4', when the resource is an html video.
+        if(false !== strpos($url, 'https://tv.campusdomar.es')){
+            $formatType = 'iframe';
+        }
+
         if (($formatType == 'video' && in_array($formatExtension, $this->VIDEO_EXTENSIONS)) || in_array($urlExtension, $this->VIDEO_EXTENSIONS)) {
             $track->addTag('display');
             $track->setOnlyAudio(false);
